@@ -1,5 +1,7 @@
-function errorHandling(request, response, next) {
-
+module.exports = function (err, request, response, next) {
+    console.log('--- HTTP ERROR HANDLING ---');
+    console.log(' ERROR : ', request.statusCode);
+    console.log(' DETAIL : ', err.toString());
     switch (request.statusCode) {
         case 404:
             console.log('render 404');
@@ -13,5 +15,5 @@ function errorHandling(request, response, next) {
     next();
 }
 
-module.exports = errorHandling;
+
 

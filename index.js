@@ -1,10 +1,10 @@
 'use strict';
 
 const config = require('./conf');
-const init = require('./init');
 const app = require('./app');
+const routing = require('./routing');
 
-init(app, config);
+app(routing, config);
 
 
 

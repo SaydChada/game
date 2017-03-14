@@ -19,8 +19,9 @@ module.exports = function (app){
         app.getController(fileController, function(err){
 
             if(err){
-                console.log('--- NOT FOUND CONTROLLER : '+ controllerName +' ---');
-                next();
+                console.log('--- CONTROLLER NOT FOUND : '+ controllerName +' ---');
+                request.statusCode = 500;
+                next(err);
             }
             else{
                 console.log('--- CONTROLLER FOUND : ' + controllerName + ' ---');
