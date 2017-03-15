@@ -82,6 +82,7 @@ class UsersController extends baseController{
 
     logoutAction(){
             this.req.logout();
+            this.req.session.destroy();
             this.res.redirect('/');
     }
 
