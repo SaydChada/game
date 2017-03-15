@@ -1,10 +1,12 @@
 "use strict";
 
 module.exports = function (app) {
+
     console.log('--- ROUTING STARTED ---');
-    // Main routing config
-    app.use('/', module.require('./app/routes/main')(app));
+
+    // Main routing config aka default routing (/controller/action)
+    app.use('/', require('./app/routes/main')(app));
     // Handle ws
-    app.use(module.require('./app/routes/websocket'));
+    app.socketIoStart =  require('./app/routes/websocket');
 
 };

@@ -1,7 +1,7 @@
-const baseController = require('./baseController');
+const baseController = require('./BaseController');
 
 
-class PostController extends baseController{
+class PostsController extends baseController{
 
     constructor(req, res){
         super(req, res);
@@ -30,4 +30,4 @@ class PostController extends baseController{
 }
 
 
-module.exports = postController;
+module.exports = PostsController;

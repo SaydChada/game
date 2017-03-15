@@ -1,7 +1,7 @@
 let blocks = Object.create(null);
 
 module.exports =  {
-    "extends": function(name, context) {
+    "extends" : function(name, context) {
         let block = blocks[name];
         if (!block) {
             block = blocks[name] = [];
@@ -9,11 +9,38 @@ module.exports =  {
 
         block.push(context.fn(this));
     },
-    "block"  : function(name) {
+    "block" : function(name) {
         let val = (blocks[name] || []).join('\n');
 
         // clear the block
         blocks[name] = [];
         return val;
+    },
+    'xif' : function (v1, operator, v2, options) {
+
+        switch (operator) {
+            case '==':
+                return (v1 == v2) ? options.fn(this) : options.inverse(this);
+            case '===':
+                return (v1 === v2) ? options.fn(this) : options.inverse(this);
+            case '!=':
+                return (v1 != v2) ? options.fn(this) : options.inverse(this);
+            case '!==':
+                return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+            case '<':
+                return (v1 < v2) ? options.fn(this) : options.inverse(this);
+            case '<=':
+                return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+            case '>':
+                return (v1 > v2) ? options.fn(this) : options.inverse(this);
+            case '>=':
+                return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+            case '&&':
+                return (v1 && v2) ? options.fn(this) : options.inverse(this);
+            case '||':
+                return (v1 || v2) ? options.fn(this) : options.inverse(this);
+            default:
+                return options.inverse(this);
+        }
     }
 };

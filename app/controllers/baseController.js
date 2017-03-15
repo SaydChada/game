@@ -1,4 +1,9 @@
+/**
+ * base class for controllers
+ */
+const path = require('path');
 class baseController{
+
     constructor(req, res){
         this.req = req;
         this.res = res;
@@ -7,30 +12,46 @@ class baseController{
         this.models = {};
     }
 
-    beforeRender(view){
+    /**
+     *
+     * @param view
+     * @param data
+     * @returns {string|*}
+     */
+    beforeRender(view, data){
 
         if(view){
             this.params.action = view;
         }
 
-        // LOG
+        if(data){
+            this.viewVars = Object.assign(this.viewVars, data);
+        }
 
-        console.log('viewDir : ' , this.viewDir);
-        console.log('action : ' , this.params.action);
-        this.view = this.viewDir + this.params.action;
+        // LOG
+        console.log('[viewDir] : "' , this.viewDir,'", [action] "', this.params.action, '"');
+        console.log('[viewVars] : ', this.viewVars );
+
+        this.view = path.join(this.viewDir , this.params.action);
 
         return this.view;
     }
 
     getModel(modelName){
 
-        let model = '../models/' + modelName;
+        modelName = baseController.toModelName(modelName);
 
         if(!this.models[modelName]){
-            this.models[modelName] = require(model);
+            let modelPath = path.join('..','models', modelName);
+            let model = require(modelPath);
+            this.models[modelName] = model.getMongooseModel();
         }
 
         return this.models[modelName];
+    }
+
+    static toModelName(model){
+        return model.charAt(0).toUpperCase() + model.slice(1);
     }
 
     render(view, data, render){
@@ -42,7 +63,7 @@ class baseController{
                 this.res.json(data);
                 break;
             default :
-                this.res.render(this.view , data);
+                this.res.render(this.view , this.viewVars);
                 break;
         }
     }

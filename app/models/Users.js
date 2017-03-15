@@ -5,6 +5,7 @@ class Users extends baseModel{
     constructor(){
         super('users');
 
+        let Schema = this.db.Schema;
         this.schema = new Schema({
             username: String,
             email: String,
@@ -12,17 +13,7 @@ class Users extends baseModel{
             created: { type: Date, default: Date.now }
         });
 
-        this.schema.plugin(autoIncrement.plugin, 'users');
-
     }
-
-    getModel(){
-        this.connect();
-        return  this.connection.model(this.document, this.schema);
-    }
-
-
-
 }
 
 

@@ -1,0 +1,24 @@
+.floating_alert {
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5000;
+    width: 40%;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   GENERAL
+   ========================================================================== */
+
+*,*:before,*:after{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+body {
+    margin-top : 1%;
+}

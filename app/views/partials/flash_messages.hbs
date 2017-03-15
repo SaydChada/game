@@ -1,0 +1,10 @@
+<!--for message in flash-->
+    <!--.floating_alert(class='alert alert-' + message.type + ' fade in', onclick="$(this).fadeOut()" style='cursor:pointer;')-->
+        <!--span=message.message-->
+
+<!--// Reset flash, ugly way to do it-->
+<!--- flash.length = 0-->
+
+{{#each message in flash}}
+<div class="floating_alert alert {{ message.type }} alert-default fade in" onclick="$(this).fadeOut()" style="cursor:pointer"><span>{{ message.message }}</span></div>
+{{/each}}

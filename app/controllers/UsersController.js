@@ -1,10 +1,10 @@
 const baseController = require('./baseController');
 
-class usersController extends baseController{
+class UsersController extends baseController{
 
     constructor(req, res){
         super(req, res);
-        this.viewDir = 'user/';
+        this.viewDir = 'user';
         this.viewVars = {};
     }
 
@@ -29,9 +29,15 @@ class usersController extends baseController{
         else{
             let userModel = this.getModel('users');
 
-            console.log(userModel.find({}));
+            userModel.find( (err, users) => {
+                if (err) {
+                    throw err;
+                }
+                this.viewVars.users = users;
+                this.render(this.view , this.viewVars);
+            });
 
-            this.render(this.view , this.viewVars);
+
         }
 
     }
@@ -39,4 +45,4 @@ class usersController extends baseController{
 }
 
 
-module.exports = usersController;
+module.exports = UsersController;

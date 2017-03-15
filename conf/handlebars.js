@@ -3,8 +3,8 @@
  * @type {{extname: string, partialsDir: string, layoutsDir: string, defaultLayout: string}}
  */
 module.exports = {
-    extname     : '.hbs',
-    partialsDir : './app/views/partials/',
-    layoutsDir   : './app/views/layouts/',
-    defaultLayout: 'frontLayout'
+    extname         : '.hbs',
+    partialsDir     : './app/views/partials/',
+    layoutsDir      : './app/views/layouts/',
+    defaultLayout   : 'frontLayout'
 };
