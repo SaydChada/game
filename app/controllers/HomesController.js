@@ -12,7 +12,14 @@ class HomesController extends baseController{
     }
 
     contactAction(){
+        this.viewVars.title = 'contact';
+        this.viewVars.formTitle = 'Contact';
         this.render('static/contact');
+    }
+
+    aboutAction(){
+        this.viewVars.title = 'a propos';
+        this.render('static/about');
     }
 }
 

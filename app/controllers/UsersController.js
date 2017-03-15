@@ -7,7 +7,7 @@ class UsersController extends baseController{
         this.viewDir = 'user';
     }
 
-    loginAction(){
+    registerAction(){
         if(this.req.method ==='POST'){
             let logins = this.req.body;
             if(logins.username && logins.password && logins.email){
@@ -38,6 +38,7 @@ class UsersController extends baseController{
                 }
                 this.viewVars.users = users;
                 this.viewVars.user = this.req.user;
+                this.viewVars.formTitle = 'Inscription';
                 this.render(this.view , this.viewVars);
             });
 
@@ -45,6 +46,10 @@ class UsersController extends baseController{
 
     }
 
+    /**
+     * Handle registration
+     * @param data
+     */
     register(data){
         let userModel = this.getModel('users');
         userModel.register(new userModel(data), data.password, (err, account) => {
@@ -57,6 +62,19 @@ class UsersController extends baseController{
                 res.redirect('/');
             });
         });
+    }
+
+    /**
+     * Handle login
+     * @param data
+     */
+    login(data){
+        // TODO log user;
+    }
+
+    loginAction(){
+        this.viewVars.formTitle = 'Connexion';
+        this.render(this.view, this.viewVars);
     }
 
 }

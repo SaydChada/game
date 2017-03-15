@@ -1,7 +1,14 @@
 const baseModel = require('./baseModel');
 const passportLocalMongoose = require('passport-local-mongoose');
+
+/**
+ * User model
+ */
 class Users extends baseModel{
 
+    /**
+     * Call parent and define schema, plus enable passeport plugin
+     */
     constructor(){
         super('users');
 
@@ -10,11 +17,20 @@ class Users extends baseModel{
             username    : String,
             email       : String,
             password    : String,
+            games       : [{ type: Schema.Types.ObjectId, ref: 'games' }],
             created     : { type: Date, default: Date.now }
         });
 
         this.schema.plugin(passportLocalMongoose, {hashField : 'password'});
 
+    }
+
+    /**
+     * Find user's played games
+     * @param user
+     */
+    findGames(user){
+        // Todo get all played user games
     }
 }
 

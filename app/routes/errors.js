@@ -1,3 +1,11 @@
+/**
+ * TODO Fix that middleware errorHandling
+ * NOT USED ANYMORE
+ * @param err
+ * @param request
+ * @param response
+ * @param next
+ */
 module.exports = function (err, request, response, next) {
     console.log('--- HTTP ERROR HANDLING ---');
     console.log(' ERROR : ', response.statusCode);
