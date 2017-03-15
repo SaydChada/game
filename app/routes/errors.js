@@ -1,8 +1,8 @@
 module.exports = function (err, request, response, next) {
     console.log('--- HTTP ERROR HANDLING ---');
-    console.log(' ERROR : ', request.statusCode);
+    console.log(' ERROR : ', response.statusCode);
     console.log(' DETAIL : ', err.toString());
-    switch (request.statusCode) {
+    switch (response.statusCode) {
         case 404:
             console.log('render 404');
             response.status(404).render("static/404");
@@ -13,7 +13,7 @@ module.exports = function (err, request, response, next) {
             break;
     }
     next();
-}
+};
 
 
 

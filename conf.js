@@ -1,26 +1,9 @@
 'use strict';
 module.exports = {
-    bdd : {
-        host        : 'localhost',
-        port        : '27017',
-        protocol    : 'mongodb',
-        database    : 'game',
-        url         : function(){
-            return this.protocol + '://' + this.host +':' + this.port + '/' + this.database;
-        }
-    },
-    server: {
-        host            : 'localhost',
-        port            : '8888',
-        protocol        : 'http',
-        url             : function(){
-            return this.protocol + '://' + this.host +':' + this.port;
-        }
-    },
-    secrets:
-        {
-            cookie  : "regr5e9g4-re9g8",
-            session : "'rez98f79r87-2'"
-        }
-
+    locals  : module.require('./conf/locals'),
+    env     : process.env["NODE_ENV"] || 'dev',
+    hbs     : module.require('./conf/handlebars'),
+    bdd     : module.require('./conf/database'),
+    server  : module.require('./conf/server'),
+    secrets : module.require('./conf/secrets')
 };

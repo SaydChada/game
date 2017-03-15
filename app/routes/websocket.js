@@ -5,6 +5,7 @@ const http     = require('http');
 
 module.exports = function(app){
 
+    console.log('--- Socket Enabled ---');
     let socketIOWebSocketServer = socketIO(http.createServer(app));
 
 

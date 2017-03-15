@@ -3,12 +3,8 @@
 module.exports = function (app) {
     console.log('--- ROUTING STARTED ---');
     // Main routing config
-    app.use('/', module.require('./routes/main')(app));
+    app.use('/', module.require('./app/routes/main')(app));
     // Handle ws
-    module.require('./routes/websocket');
-
-    //Handle server errors
-    app.use(module.require('./routes/errors'));
-
+    app.use(module.require('./app/routes/websocket'));
 
 };

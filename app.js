@@ -7,17 +7,18 @@ function init(routing, localConf){
     "use strict";
 
     // Dependencies modules
-    const express        = module.require('express');
-    const session        = module.require('express-session');
-    const cookieParser   = module.require('cookie-parser');
-    const bodyParser     = module.require('body-parser');
-    const path           = module.require('path');
-    const methodOverride = module.require('method-override');
-    const fs             = module.require('fs');
-    const handlebars     = module.require('express-handlebars');
-    const MongoStore     = module.require('connect-mongo')(session);
-    const mongoose       = module.require('mongoose');
+    const express        = require('express');
+    const session        = require('express-session');
+    const cookieParser   = require('cookie-parser');
+    const bodyParser     = require('body-parser');
+    const path           = require('path');
+    const methodOverride = require('method-override');
+    const fs             = require('fs');
+    const handlebars     = require('express-handlebars');
+    const MongoStore     = require('connect-mongo')(session);
+    const mongoose       = require('mongoose');
     const app            = express();
+    const socketIo       = require('socket.io');
 
 // Express config
 
@@ -26,15 +27,22 @@ function init(routing, localConf){
     app.use( bodyParser.json() );
     app.use( bodyParser.urlencoded({extended: true}) );
     app.use( methodOverride('_method') );
+    app.locals = localConf.locals;
 
 // View configuration
-    app.engine('handlebars', handlebars({defaultLayout: 'main'}));
-    app.set('view engine', 'handlebars');
-    app.use( '/src', express.static( path.join( __dirname, 'src' ) ) );
-    app.set( 'views', path.join( __dirname ,'src', 'views' ) );
+
+    // Set directories
+    app.set( 'views', path.join( __dirname, './app/views' ) );
+    app.set('layouts', path.join( app.get('views'), 'layouts'));
+    app.use( '/public', express.static( path.join( __dirname, 'public' ) ) );
+
+    // Configure handlebars && Set as default engine, merge with global helpers
+    let hbsConf = Object.assign(require('./app/views/helpers/global'), localConf.hbs);
+    app.engine('hbs', handlebars(hbsConf));
+    app.set('view engine', 'hbs');
+    app.enable('view cache');
 
 // Session config
-    console.log(localConf.bdd.url());
     mongoose.connect(localConf.bdd.url());
     app.use(session({
         secret: localConf.secrets.session,
@@ -43,10 +51,8 @@ function init(routing, localConf){
         resave: true
     }));
 
-
-
     app.listen(localConf.server.port, localConf.server.host, function() {
-        console.log('--- SERVER : ' + localConf.server.url() + ' ---');
+        routing(app);
     });
 
     app.getController = function(controllerName, callback){
@@ -54,8 +60,6 @@ function init(routing, localConf){
             callback(err);
         });
     };
-
-    routing(app);
 
 }
 

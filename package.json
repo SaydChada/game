@@ -1,6 +1,7 @@
 {
   "name": "game",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Ifocop project multiplayer game",
   "main": "index.js",
   "dependencies": {
     "body-parser": "^1.16.1",
@@ -13,5 +14,26 @@
     "mongoose": "^4.8.7",
     "socket.io": "^1.7.3"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaydChada/game.git"
+  },
+  "keywords": [
+    "game;",
+    "express;",
+    "nodejs;",
+    "handlebars;",
+    "socket.io"
+  ],
+  "author": "Said Chada",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaydChada/game/issues"
+  },
+  "homepage": "https://github.com/SaydChada/game#readme"
 }

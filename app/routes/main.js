@@ -20,8 +20,7 @@ module.exports = function (app){
 
             if(err){
                 console.log('--- CONTROLLER NOT FOUND : '+ controllerName +' ---');
-                request.statusCode = 500;
-                next(err);
+                response.status(404).render("static/404", { title : 'ERROR :: 404'});
             }
             else{
                 console.log('--- CONTROLLER FOUND : ' + controllerName + ' ---');
@@ -30,13 +29,11 @@ module.exports = function (app){
                 if(!controller.callAction(requestAction)){
 
                     console.log('--- ACTION NOT FOUND : '+ requestAction +' ---');
+                    response.status(500).render("static/500");
 
-                    request.statusCode = 404;
-                    next();
                 }
             }
         });
-
     });
 
     return router;

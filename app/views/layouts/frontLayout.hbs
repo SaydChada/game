@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{#> head-block}}
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+        <title> {{ title }}</title>
+        <link rel="shortcut icon" href="/public/icon/favicon.ico" type="image/x-icon">
+        {{> css}}
+    {{/head-block}}
+</head>
+<body>
+
+    <div class="container">
+        {{{body}}}
+    </div>
+</body>
+{{#> script-block}}
+    {{> script }}
+    <script type="application/javascript" src="/public/js/main.js"></script>
+{{/script-block}}
+</html>
