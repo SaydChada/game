@@ -17,7 +17,8 @@ class baseController{
         this.viewDir = '';
         this.params = this.req.params;
         this.models = {};
-        this.viewVars = {url : req.url};
+        console.log(req);
+        this.viewVars = {url : req.url, user: req.user};
     }
 
     /**

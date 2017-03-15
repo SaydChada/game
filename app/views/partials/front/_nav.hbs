@@ -25,16 +25,18 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <!--Check if user is connected-->
-                {{#xif 1 '==' 1 }}
-                    <li class="{{#xif url '==' '/users/register' }}active{{/xif}}">
+                {{#if user }}
+                    <li>
+                        <a href="/users/logout" >Déconnexion</a>
+                    </li>
+                {{else}}
+                    <li {{#xif url '==' '/users/register' }}class="active"{{/xif}}>
                         <a href="/users/register" >Inscription</a>
                     </li>
-                    <li class="{{#xif url '==' '/users/login' }}active{{/xif}}">
+                    <li {{#xif url '==' '/users/login' }}class="active"{{/xif}}>
                         <a href="/users/login" >Connexion</a>
                     </li>
-
-                {{/xif}}
+                {{/if}}
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->

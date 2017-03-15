@@ -57,24 +57,32 @@ class UsersController extends baseController{
                 throw err;
             }
 
-            this.passport.authenticate('local')(this.req, this.res, function () {
+            this.passport.authenticate('local')(this.req, this.res, () => {
                 console.log('Account : ',account);
-                res.redirect('/');
+                this.res.redirect('/');
             });
         });
     }
 
     /**
      * Handle login
-     * @param data
      */
-    login(data){
-        // TODO log user;
-    }
-
     loginAction(){
         this.viewVars.formTitle = 'Connexion';
-        this.render(this.view, this.viewVars);
+        if(this.req.method ==='POST'){
+            this.passport.authenticate('local')(this.req, this.res, () => {
+                this.res.redirect('/');
+            });
+        }else{
+            this.render(this.view, this.viewVars);
+
+        }
+
+    }
+
+    logoutAction(){
+            this.req.logout();
+            this.res.redirect('/');
     }
 
 }

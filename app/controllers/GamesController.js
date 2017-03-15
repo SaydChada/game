@@ -1,10 +1,9 @@
 const baseController = require('./baseController');
 
-class AdminsController extends baseController{
+class GamesController extends baseController{
     constructor(req, res){
         super(req, res);
-        this.viewVars.defaultLayout   = 'adminLayout';
-        this.viewDir = 'admin';
+        this.viewDir = 'game';
     }
 
     indexAction(){
@@ -15,7 +14,7 @@ class AdminsController extends baseController{
 
 }
 
-module.exports = AdminsController;
+module.exports = GamesController;
 
 
 

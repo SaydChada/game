@@ -55,7 +55,7 @@ function init(routing, localConf){
         }),
         saveUninitialized : false, // Dont save session on initialisation
         resave: false,  // Dont resave every time client refresh
-        cookie: { secure: true }
+        cookie: { secure: false }
     }));
 
 // Passeport configuration
