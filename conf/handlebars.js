@@ -4,7 +4,12 @@
  */
 module.exports = {
     extname         : '.hbs',
-    partialsDir     : './app/views/partials/',
+    // Here specify every partials dirs
+    partialsDir     : [
+        './app/views/partials/',
+        './app/views/user/partials/',
+        './app/views/game/partials/'
+    ],
     layoutsDir      : './app/views/layouts/',
     defaultLayout   : 'frontLayout'
 };

@@ -3,7 +3,6 @@ const baseController = require('./baseController');
 class HomesController extends baseController{
     constructor(req, res){
         super(req, res);
-        this.viewVars = {};
     }
 
     indexAction(){

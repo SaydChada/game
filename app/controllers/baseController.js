@@ -7,9 +7,12 @@ class baseController{
     constructor(req, res){
         this.req = req;
         this.res = res;
+        this.passport = require('passport');
         this.viewDir = '';
         this.params = this.req.params;
         this.models = {};
+        console.log(req.session);
+        this.viewVars = {url : req.url};
     }
 
     /**

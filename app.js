@@ -11,6 +11,8 @@ function init(routing, localConf){
     const session        = require('express-session');
     const cookieParser   = require('cookie-parser');
     const bodyParser     = require('body-parser');
+    const passport       = require('passport');
+    const LocalStrategy  = require('passport-local').Strategy;
     const path           = require('path');
     const methodOverride = require('method-override');
     const fs             = require('fs');
@@ -46,13 +48,28 @@ function init(routing, localConf){
 
     app.use(session({
         secret: localConf.secrets.session,
-        store: new MongoStore({ mongooseConnection: mongoose.connection }),
-        saveUninitialized : false,
-        resave: false,
+        store: new MongoStore({
+            mongooseConnection: mongoose.connection,
+            autoRemove: 'native', // Clean session in bdd
+            touchAfter: 12 * 3600 // Resave session only after 12 hours
+        }),
+        saveUninitialized : false, // Dont save session on initialisation
+        resave: false,  // Dont resave every time client refresh
         cookie: { secure: true }
     }));
 
+// Passeport configuration
+    app.use(passport.initialize());
+    app.use(passport.session());
+    let Account = (require('./app/models/Users')).getMongooseModel();
+    passport.use(new LocalStrategy(Account.authenticate()));
+    passport.serializeUser(Account.serializeUser());
+    passport.deserializeUser(Account.deserializeUser());
 
+
+    /**
+     * Server start then routing then socket.io init
+     */
     app.listen(localConf.server.port, localConf.server.host, function() {
         console.log('--- SERVER START : ' + localConf.server.url() + ' ---');
         routing(app);

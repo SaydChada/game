@@ -1,4 +1,5 @@
-<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <!-- Div Panel-->
     <div class="panel panel-success">
         <!-- Panel Heading-->
@@ -8,25 +9,35 @@
         <!-- End panel heading-->
         <!-- Panel body-->
         <div class="panel-body">
-            <form role="form" method="post" action="login" class="form-horizontal">
+            <form role="form" method="post" action="{{ url }}" class="form-horizontal">
                 <!-- Username-->
-                <div class="input-group input-username"><span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input type="text" name="username" placeholder="username" autofocus="" class="form-control"/>
                 </div>
-                <!-- Password-->
-                <p>&nbsp;</p>
-                <div class="input-group input-password"><span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <br>
+                <!-- email-->
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    <input type="email" name="email"  placeholder="email" class="form-control"/>
+                </div>
+                <br>
+                <!--password-->
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <input type="password" name="password" placeholder="password" class="form-control"/>
                 </div>
-                <div class="input-group checkbox-remember">
-                    <div class="checkbox">
+                <hr>
+                <div class="form-group">
+
+                    <div class="checkbox col-sm-7 col-sm-offset-1">
                         <label>
-                            <input id="login-remember" type="checkbox" name="remember" value="1"/>Se souvenir de moi
+                            <input id="login-remember" type="checkbox" name="remember" value="1"/>
+                            Se souvenir de moi ?
                         </label>
                     </div>
-                </div>
-                <div class="form-group login-button">
-                    <div class="col-sm-12 controls">
+
+                    <div class="col-sm-4">
                         <button type="submit" class="btn btn-success">Connexion</button>
                     </div>
                 </div>
@@ -37,4 +48,4 @@
     </div>
     <!-- End panel group-->
 </div>
-<!-- End col div-->
+<!-- End col div--></div>

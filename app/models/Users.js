@@ -1,5 +1,5 @@
 const baseModel = require('./baseModel');
-
+const passportLocalMongoose = require('passport-local-mongoose');
 class Users extends baseModel{
 
     constructor(){
@@ -7,11 +7,13 @@ class Users extends baseModel{
 
         let Schema = this.db.Schema;
         this.schema = new Schema({
-            username: String,
-            email: String,
-            password: String,
-            created: { type: Date, default: Date.now }
+            username    : String,
+            email       : String,
+            password    : String,
+            created     : { type: Date, default: Date.now }
         });
+
+        this.schema.plugin(passportLocalMongoose, {hashField : 'password'});
 
     }
 }

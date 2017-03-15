@@ -1,9 +1,10 @@
 /**
- * Define local vars for the full app
- * @type {{env: string, website: string, admin_email: string}}
+ *  Define local vars for the full app
+ * @type {{env: string, website: string, adminEmail: string, currentYear: number}}
  */
 module.exports = {
     env             : "dev",
     website         : "SpeedFinger",
-    admin_email     : "contact@chadasaid.net"
+    adminEmail      : "contact@chadasaid.net",
+    currentYear     : (new Date()).getFullYear()
 };
