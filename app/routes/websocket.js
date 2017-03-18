@@ -1,13 +1,11 @@
 "use strict";
 
 const socketIO = require('socket.io');
-const http     = require('http');
 
-module.exports = function(app){
+module.exports = function(server){
 
     console.log('--- SOCKET ENABLED ---');
-    let socketIOWebSocketServer = socketIO(http.createServer(app));
-
+    let socketIOWebSocketServer = socketIO.listen(server);
 
     socketIOWebSocketServer.on('connection', function (socket) {
 

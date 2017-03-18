@@ -8,8 +8,15 @@ class GamesController extends baseController{
 
     indexAction(){
 
-        this.viewVars.title = 'index';
-        this.render(this.view);
+        if(this.req.isAuthenticated()){
+            this.viewVars.title = 'index';
+            this.render(this.view);
+        }
+        else{
+            this.viewVars.flashMessages.push({type : 'warning', message : 'Vous devez être connecté!'});
+            this.res.redirect('/users/login');
+        }
+
     }
 
 }

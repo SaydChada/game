@@ -7,6 +7,7 @@ function init(routing, localConf){
     "use strict";
 
 // Dependencies modules
+    const http           = require('http');
     const express        = require('express');
     const session        = require('express-session');
     const cookieParser   = require('cookie-parser');
@@ -71,15 +72,16 @@ function init(routing, localConf){
     global.mailTransporter = nodemailer.createTransport(localConf.mail);
 
 
-
     /**
      * Server start then routing then socket.io init
      */
-    app.listen(localConf.server.port, localConf.server.host, function() {
-        console.log('--- SERVER START : ' + localConf.server.url() + ' ---');
+    http.createServer(app).listen(localConf.server.port, localConf.server.host, function() {
+
         routing(app);
-        app.socketIoStart(app);
+        app.SocketIo = app.socketIoStart(this);
+
     });
+
 
     /**
      * Check if controler file exist && accessible

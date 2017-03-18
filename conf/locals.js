@@ -4,6 +4,7 @@
  */
 module.exports = {
     env             : "dev",
+    host            : "localhost",
     website         : "SpeedFinger",
     adminEmail      : "contact@chadasaid.net",
     currentYear     : (new Date()).getFullYear()
