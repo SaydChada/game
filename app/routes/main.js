@@ -33,12 +33,11 @@ module.exports = function (app){
             else{
                 console.log('--- CONTROLLER FOUND : ' + controllerPath + ' ---');
 
-                let controller = new (require(controllerModule))(request, response);
+                let controller = new (require(controllerModule))(request, response, next);
                 if(!controller.callAction(requestAction)){
 
                     console.log('--- ACTION NOT FOUND : '+ requestAction +' ---');
                     response.status(500).render("static/500", {title : '500'});
-
                 }
             }
         });

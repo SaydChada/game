@@ -2,8 +2,8 @@ const baseController = require('./baseController');
 
 class UsersController extends baseController{
 
-    constructor(req, res){
-        super(req, res);
+    constructor(req, res, next){
+        super(req, res, next);
         this.viewDir = 'user';
     }
 
@@ -59,6 +59,10 @@ class UsersController extends baseController{
 
             this.passport.authenticate('local')(this.req, this.res, () => {
                 console.log('Account : ',account);
+                this.viewVars.flashMessages.push({
+                    type: 'warning',
+                    message: 'Merci pour votre inscription, vous êtes connecté !'
+                });
                 this.res.redirect('/');
             });
         });
@@ -71,6 +75,10 @@ class UsersController extends baseController{
         this.viewVars.formTitle = 'Connexion';
         if(this.req.method ==='POST'){
             this.passport.authenticate('local')(this.req, this.res, () => {
+                this.viewVars.flashMessages.push({
+                    type: 'info',
+                    message: 'Connexion réussie !'
+                });
                 this.res.redirect('/');
             });
         }else{
@@ -81,9 +89,14 @@ class UsersController extends baseController{
     }
 
     logoutAction(){
-            this.req.logout();
-            this.req.session.destroy();
-            this.res.redirect('/');
+        this.req.logout();
+        // Destroying session also destroy flash messages lulz
+        // this.req.session.destroy();
+        this.viewVars.flashMessages.push({
+            type: 'info',
+            message: 'Déconnexion réussie !'
+        });
+        this.res.redirect('/');
     }
 
 }

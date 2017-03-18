@@ -66,6 +66,11 @@ function init(routing, localConf){
     passport.serializeUser(Account.serializeUser());
     passport.deserializeUser(Account.deserializeUser());
 
+// Mailer configuration
+    const nodemailer = require('nodemailer');
+    global.mailTransporter = nodemailer.createTransport(localConf.mail);
+
+
 
     /**
      * Server start then routing then socket.io init

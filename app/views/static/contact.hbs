@@ -5,7 +5,7 @@
                 <div class="panel-title text-center">Contact</div>
             </div>
             <div class="panel-body">
-                <form role="form" method="post" action="/homes/contact" class="form-horizontal">
+                <form role="form" method="POST" action="{{ url }}" class="form-horizontal">
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -14,7 +14,7 @@
                     <br>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                        <input type="text" class="form-control" id="email" name="email" placeholder="Email" required="">
+                        <input type="text" class="form-control" id="from" name="from" placeholder="Email" required="">
                     </div>
                     <br>
                     <div class="input-group">
@@ -23,7 +23,7 @@
                     </div>
                     <br>
                     <div class="row-fluid">
-                        <textarea class="form-control" id="message" placeholder="Message..." maxlength="140" rows="7"></textarea>
+                        <textarea class="form-control" id="message" name="message" placeholder="Message..." maxlength="200" rows="7"></textarea>
                         <span class="help-block"><i id="characterLeft" class="help-block ">200 characteres réstant</i></span>
                     </div>
                     <hr>

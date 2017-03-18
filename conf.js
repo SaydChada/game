@@ -5,5 +5,6 @@ module.exports = {
     hbs     : module.require('./conf/handlebars'),
     bdd     : module.require('./conf/database'),
     server  : module.require('./conf/server'),
-    secrets : module.require('./conf/secrets')
+    secrets : module.require('./conf/secrets'),
+    mail    : module.require('./conf/mail')
 };

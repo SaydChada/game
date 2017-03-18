@@ -6,19 +6,54 @@ class baseController{
 
     /**
      *
-     * @param req : Object | HttpRequest
-     * @param res : Object | HttpResponse
+     * @param req  : Object | HttpRequest
+     * @param res  : Object | HttpResponse
+     * @param next : Function | next middleware
      */
-    constructor(req, res){
+    constructor(req, res, next){
         this.req = req;
-        this.requireAuth = false;
+        this.next = next;
         this.res = res;
+        this.requireAuth = false;
         this.passport = require('passport');
         this.viewDir = '';
         this.params = this.req.params;
         this.models = {};
-        console.log(req);
+
         this.viewVars = {url : req.url, user: req.user};
+        this.viewVars.flashMessages =  this.req.session.flashMessages || [];
+    }
+
+
+    /**
+     * send Mail using template
+     *
+     * @param view : String | email view
+     * @param data : Object | may contain context vars and layout
+     * @param callback
+     */
+    sendMailView(view, data, callback){
+
+        // Set default layout if not
+        data.layout = data.layout || 'emailLayout';
+
+
+        // render template before send email
+        this.req.app.render(view, data, function(err, hbsTemplate){
+
+            let mailOptions = {
+                from: data.from,
+                to: data.target,
+                subject: data.subject,
+                text: data.message,
+                html: hbsTemplate
+            };
+
+            // send mail with defined transport object
+            mailTransporter.sendMail(mailOptions, callback);
+        });
+
+
     }
 
     /**
@@ -38,6 +73,7 @@ class baseController{
         }
 
         // LOG
+        console.log('[method] : ', this.req.method);
         console.log('[viewDir] : "' , this.viewDir,'", [action] "', this.params.action, '"');
         console.log('[viewVars] : ', this.viewVars );
 
@@ -89,6 +125,7 @@ class baseController{
                 break;
             default :
                 this.res.render(this.view , this.viewVars);
+                this.next();
                 break;
         }
     }

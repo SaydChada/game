@@ -1,12 +1,13 @@
 .floating_alert {
-    position: absolute;
-    top: 10px;
-    left: 25%;
+    position: fixed;
+    top: 5%;
+    left: 30%;
     z-index: 5000;
     width: 40%;
     text-align: center;
     display: inline-block;
     cursor: pointer;
+    padding: 2%;
 }
 
 /* ==========================================================================

@@ -1,8 +1,8 @@
 const baseController = require('./baseController');
 
 class GamesController extends baseController{
-    constructor(req, res){
-        super(req, res);
+    constructor(req, res, next){
+        super(req, res, next);
         this.viewDir = 'game';
     }
 

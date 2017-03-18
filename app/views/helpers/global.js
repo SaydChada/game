@@ -16,6 +16,13 @@ module.exports =  {
         blocks[name] = [];
         return val;
     },
+    "debug" : function(optionalValue) {
+
+        console.log("HBS vars : " );
+        console.log("====================");
+        console.log(optionalValue);
+
+    },
     'xif' : function (v1, operator, v2, options) {
 
         switch (operator) {
