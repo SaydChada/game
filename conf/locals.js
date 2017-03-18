@@ -4,7 +4,7 @@
  */
 module.exports = {
     env             : "dev",
-    host            : "localhost",
+    server          : require('./server'),
     website         : "SpeedFinger",
     adminEmail      : "contact@chadasaid.net",
     currentYear     : (new Date()).getFullYear()

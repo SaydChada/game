@@ -27,8 +27,8 @@ module.exports = function (app){
 
             if(err){
                 console.log('--- CONTROLLER NOT FOUND : '+ controllerPath + ' ---');
-                console.error(err);
-                response.status(404).render("static/404", { title : '404'});
+                response.statusCode = 404;
+                next(err);
             }
             else{
                 console.log('--- CONTROLLER FOUND : ' + controllerPath + ' ---');
@@ -36,8 +36,8 @@ module.exports = function (app){
                 let controller = new (require(controllerModule))(request, response, next);
                 if(!controller.callAction(requestAction)){
 
-                    console.log('--- ACTION NOT FOUND : '+ requestAction +' ---');
-                    response.status(500).render("static/500", {title : '500'});
+                    response.statusCode = 500;
+                    next( new Error('--- ACTION NOT FOUND : '+ requestAction +' ---'));
                 }
             }
         });

@@ -17,10 +17,7 @@ class UsersController extends baseController{
                     email : logins.email,
                     password : logins.password
                 };
-
-
                 this.register(data);
-
             }
             // No username or login
             else{
@@ -47,7 +44,34 @@ class UsersController extends baseController{
     }
 
     /**
-     * Handle registration
+     * Handle login
+     */
+    loginAction(){
+        this.viewVars.formTitle = 'Connexion';
+        this.viewVars.title     = 'Connexion';
+
+        if(this.req.method ==='POST'){
+            this.passport.authenticate('local', this.login.bind(this))(this.req, this.res, this.next);
+        }else{
+            return this.render(this.view, this.viewVars);
+        }
+
+    }
+
+    logoutAction(){
+        this.req.logout();
+        // Destroying session also destroy flash messages lulz
+        // this.req.session.destroy();
+        this.viewVars.flashMessages.push({
+            type: 'info',
+            message: 'Déconnexion réussie !'
+        });
+        this.res.redirect('/');
+    }
+
+
+    /**
+     * Handle registrationCallback
      * @param data
      */
     register(data){
@@ -69,35 +93,39 @@ class UsersController extends baseController{
     }
 
     /**
-     * Handle login
+     * Handle logincallback
+     * @param err
+     * @param user
+     * @param info
+     * @returns {*}
      */
-    loginAction(){
-        this.viewVars.formTitle = 'Connexion';
-        if(this.req.method ==='POST'){
-            this.passport.authenticate('local')(this.req, this.res, () => {
-                this.viewVars.flashMessages.push({
-                    type: 'info',
-                    message: 'Connexion réussie !'
-                });
-                this.res.redirect('/');
-            });
-        }else{
-            this.render(this.view, this.viewVars);
-
+    login(err, user, info){
+        if (err) {
+            return this.next(err);
         }
+        if (!user) {
 
-    }
+            this.viewVars.flashMessages.push({
+                type: 'danger',
+                message: 'Login / mot de passe incorrects !'
+            });
 
-    logoutAction(){
-        this.req.logout();
-        // Destroying session also destroy flash messages lulz
-        // this.req.session.destroy();
-        this.viewVars.flashMessages.push({
-            type: 'info',
-            message: 'Déconnexion réussie !'
+            return this.render(this.view);
+        }
+        this.req.logIn(user, (err) => {
+            if (err) {
+                return this.next(err);
+            }
+
+            this.viewVars.flashMessages.push({
+                type: 'info',
+                message: 'Connexion réussie !'
+            });
+
+            return this.res.redirect('/');
         });
-        this.res.redirect('/');
     }
+
 
 }
 

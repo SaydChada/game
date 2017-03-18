@@ -9,7 +9,7 @@ function init(routing, localConf){
 // Dependencies modules
     const http           = require('http');
     const express        = require('express');
-    const session        = require('express-session');
+    const expressSession = require('express-session');
     const cookieParser   = require('cookie-parser');
     const bodyParser     = require('body-parser');
     const passport       = require('passport');
@@ -18,7 +18,7 @@ function init(routing, localConf){
     const methodOverride = require('method-override');
     const fs             = require('fs');
     const handlebars     = require('express-handlebars');
-    const MongoStore     = require('connect-mongo')(session);
+    const MongoStore     = require('connect-mongo')(expressSession);
     const mongoose       = require('mongoose');
     const app            = express();
 
@@ -47,7 +47,7 @@ function init(routing, localConf){
 // Session config
     global.dbConnection = mongoose.connect(localConf.bdd.url());
 
-    app.use(session({
+    let session = expressSession({
         secret: localConf.secrets.session,
         store: new MongoStore({
             mongooseConnection: mongoose.connection,
@@ -57,7 +57,8 @@ function init(routing, localConf){
         saveUninitialized : false, // Dont save session on initialisation
         resave: false,  // Dont resave every time client refresh
         cookie: { secure: false }
-    }));
+    });
+    app.use(session);
 
 // Passeport configuration
     app.use(passport.initialize());
@@ -78,7 +79,12 @@ function init(routing, localConf){
     http.createServer(app).listen(localConf.server.port, localConf.server.host, function() {
 
         routing(app);
-        app.SocketIo = app.socketIoStart(this);
+        app.socketIo = app.socketIoStart(this);
+
+        // Share session with socket
+        app.socketIo.use(function(socket, next) {
+            session(socket.handshake, {}, next);
+        });
 
     });
 

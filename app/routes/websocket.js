@@ -5,20 +5,33 @@ const socketIO = require('socket.io');
 module.exports = function(server){
 
     console.log('--- SOCKET ENABLED ---');
-    let socketIOWebSocketServer = socketIO.listen(server);
+    let socketIo = socketIO.listen(server);
 
-    socketIOWebSocketServer.on('connection', function (socket) {
 
-        socket.on('squareCreated', function(data){
+     // client aka socket : because more readable
+    socketIo.on('connection', function (client) {
+
+
+        client.on('join', function(data) {
+            console.log('session', client.handshake.session);
+            console.log(data);
+        });
+
+        client.on('disconnect', function(data){
+            console.log('coucou');
+            socketIo.emit('clientLeave', {client_id : '3'});
+        });
+
+        client.on('squareCreated', function(data){
             socket.broadcast.emit('newSquareAdded', data);
 
         });
 
-        socket.on('squareMove', function (data) {
+        client.on('squareMove', function (data) {
             socket.broadcast.emit('squareHasMove', data);
         });
 
-        socket.on('squareLeave', function(data){
+        client.on('squareLeave', function(data){
             console.log('squareLeave: ' , data);
             socket.broadcast.emit('squareLeave', data)
         });
@@ -26,7 +39,7 @@ module.exports = function(server){
 
 
 
-    return socketIO;
+    return socketIo;
 
 
 };
