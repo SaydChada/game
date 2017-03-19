@@ -7,6 +7,11 @@
 .main_section{
     border: solid 1px #dddddd;
 }
+.users_side_list{
+    border-right: solid 1px;
+    border-color: #dddddd;
+}
+
 
 #custom-search-input .search-query {
     background: #fff none repeat scroll 0 0 !important;
@@ -32,14 +37,14 @@
 .search-query:focus + button {
     z-index: 3;
 }
-.all_conversation button {
+.lobby button {
     background: #f5f3f3 none repeat scroll 0 0;
     border: 1px solid #dddddd;
     height: 38px;
     text-align: left;
     width: 100%;
 }
-.all_conversation i {
+.lobby i {
     background: #e9e7e8 none repeat scroll 0 0;
     border-radius: 100px;
     color: #636363;
@@ -49,62 +54,62 @@
     text-align: center;
     width: 30px;
 }
-.all_conversation .caret {
+.lobby .caret {
     bottom: 0;
     margin: auto;
     position: absolute;
     right: 15px;
     top: 0;
 }
-.all_conversation .dropdown-menu {
+.lobby .dropdown-menu {
     background: #f5f3f3 none repeat scroll 0 0;
     border-radius: 0;
     margin-top: 0;
     padding: 0;
     width: 100%;
 }
-.all_conversation ul li {
+.lobby ul li {
     border-bottom: 1px solid #dddddd;
     line-height: normal;
     width: 100%;
 }
-.all_conversation ul li a:hover {
+.lobby ul li a:hover {
     background: #dddddd none repeat scroll 0 0;
     color:#333;
 }
-.all_conversation ul li a {
+.lobby ul li a {
     color: #333;
     line-height: 30px;
     padding: 3px 20px;
 }
-.member_list .chat-body {
+#users_list .chat-body {
     margin-left: 47px;
     margin-top: 0;
 }
 .top_nav {
     overflow: visible;
 }
-.member_list .contact_sec {
+#users_list .contact_sec {
     margin-top: 3px;
 }
-.member_list li {
+#users_list li {
     padding: 6px;
 }
-.member_list ul {
+#users_list ul {
     border: 1px solid #dddddd;
 }
 .chat-img img {
     height: 34px;
     width: 34px;
 }
-.member_list li {
+#users_list li {
     border-bottom: 1px solid #dddddd;
     padding: 6px;
 }
-.member_list li:last-child {
+#users_list li:last-child {
     border-bottom:none;
 }
-.member_list {
+#users_list {
     height: 412px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -127,7 +132,7 @@
     top: 0;
     width: 100%;
 }
-.all_conversation ul li:hover .sub_menu_ {
+.lobby ul li:hover .sub_menu_ {
     display: block;
 }
 .new_message_head button {
@@ -164,7 +169,7 @@
     background: #fbf9fa none repeat scroll 0 0;
     padding: 10px;
 }
-.chat_area .admin_chat .chat-body1 {
+.chat_area .chat-body1 {
     margin-left: 0;
     margin-right: 50px;
 }
@@ -195,8 +200,8 @@
     float: left;
     width:100%;
 }
-.member_list li:hover {
-    background: #428bca none repeat scroll 0 0;
+#users_list>li:hover {
+    background-color: #d27b7b;
     color: #fff;
     cursor:pointer;
 }

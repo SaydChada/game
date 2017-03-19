@@ -14,14 +14,21 @@ class baseController{
         this.req = req;
         this.next = next;
         this.res = res;
-        this.requireAuth = false;
-        this.passport = require('passport');
-        this.viewDir = '';
         this.params = this.req.params;
+        this.passport = require('passport');
         this.models = {};
+        this.viewDir = '';
 
         this.viewVars = {url : req.url, user: req.user};
         this.viewVars.flashMessages =  this.req.session.flashMessages || [];
+        this.viewVars.helpers = {};
+
+        // Didn't found a better way to store usserId in session, maybe passport can bet conf to do the job
+        if(!this.req.session.userId && this.req.user){
+            this.req.session.userId = this.req.user._id ;
+        }
+
+        this.helpersDir = '../views/helpers/';
     }
 
 
@@ -75,7 +82,8 @@ class baseController{
         // LOG
         console.log('[method] : ', this.req.method);
         console.log('[viewDir] : "' , this.viewDir,'", [action] "', this.params.action, '"');
-        console.log('[viewVars] : ', this.viewVars );
+        console.log('==================== [viewVars] ====================== ' );
+        console.dir( this.viewVars, {showHidden : false, depth : 1, color : true});
 
         this.view = path.join(this.viewDir , this.params.action);
 

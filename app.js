@@ -79,7 +79,7 @@ function init(routing, localConf){
     http.createServer(app).listen(localConf.server.port, localConf.server.host, function() {
 
         routing(app);
-        app.socketIo = app.socketIoStart(this);
+        app.socketIo = app.socketIoStart(this, app);
 
         // Share session with socket
         app.socketIo.use(function(socket, next) {

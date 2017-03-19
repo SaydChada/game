@@ -9,8 +9,17 @@ class GamesController extends baseController{
     indexAction(){
 
         if(this.req.isAuthenticated()){
-            this.viewVars.title = 'index';
-            this.render(this.view);
+            this.viewVars.title = 'game';
+            this.viewVars.helpers['getStatusLabel'] = require(this.helpersDir + 'game/getStatusLabel');
+
+            let userModel = this.getModel('users');
+            userModel.find({ _id : {$ne : this.req.user._id}, status : 'online'}, (err, users) => {
+                if (err) {
+                    throw err;
+                }
+                this.viewVars.onlineUsers = users;
+                this.render(this.view);
+            });
         }
         else{
             this.viewVars.flashMessages.push({type : 'warning', message : 'Vous devez être connecté!'});

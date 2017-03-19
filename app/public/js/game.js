@@ -1,22 +1,40 @@
 $(document).ready(function(){
 
+    // getting server
     var server = $('#game').data('server');
+
+    var $userList = $('#users_list');
+    var $statusMenu = $('#status_menu');
+
+    /* ==========================================================================
+     LOBBY
+     ========================================================================== */
 
     var socket = io.connect(server);
 
-    socket.on('connect', function(data) {
+    socket.on('connect', function() {
 
-        socket.emit('join', 'hi dude i just joined');
+        socket.emit('userJoin');
 
     });
 
-    socket.on("disconnect", function(){
-        socket.emit('disconnect', 'disconnected')
+
+    socket.on('userLeave', function(data){
+        var $userBlock = $("#" + data.userId);
+        $userBlock && $userBlock.remove();
     });
 
+    socket.on('userJoin', function(data){
+        var userId = data.userId;
+        var blockUser = data.template;
 
-    socket.on('clientLeave', function(data){
-        console.log(data);
-    })
+
+        var existingBlockUser = $('#' + userId).length;
+        if(!existingBlockUser){
+            $userList.append($(blockUser));
+        }
+
+    });
+
 
 });

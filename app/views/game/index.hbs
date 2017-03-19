@@ -3,66 +3,21 @@
     <link rel="stylesheet" href="/public/css/game.css" type="text/css">
 {{/extends}}
 
-
 <div class="main_section equal" id="game" data-server ="{{ server.protocol }}://{{ server.host }}:{{ server.port }}">
     <div class="row-fluid">
-        <div class="chat_container">
-            <div class="col-sm-3 chat_sidebar">
-                <div class="row">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <input type="text" class="  search-query form-control" placeholder="Conversation" />
-                            <button class="btn btn-danger" type="button">
-                                <span class=" glyphicon glyphicon-search"></span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dropdown all_conversation">
-                        <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-weixin" aria-hidden="true"></i>
-                            All Conversations
-                            <span class="caret pull-right"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a href="#"> All Conversation </a>  <ul class="sub_menu_ list-unstyled">
-                                <li><a href="#"> All Conversation </a> </li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                            </li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </div>
-                    <div class="member_list">
-                        <ul class="list-unstyled">
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                            {{> block_user }}
-                        </ul>
-                    </div></div>
-            </div>
-            <!--chat_sidebar-->
 
-            <div class="col-md-9 col-xs-12">
-                {{> block_messages }}
-            </div>
-            <div class="clearfix"></div>
+        <div class="col-sm-3 col-xs-12">
+            {{> block_lobby}}
+
         </div>
 
+        <div class="col-md-9 col-xs-12">
+            {{> block_party }}
+        </div>
+        <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
-</div>
 
+</div>
 
 {{#extends "script-block"}}
     <script src="/socket.io/socket.io.js" type="application/javascript"></script>
