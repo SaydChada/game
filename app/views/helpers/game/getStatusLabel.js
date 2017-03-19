@@ -8,6 +8,9 @@ module.exports =
             case 'online' :
                 color = 'success';
                 break;
+            case 'offline' :
+                color = 'danger';
+                break;
             default :
                 color = "success";
 
