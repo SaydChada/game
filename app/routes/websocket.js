@@ -15,7 +15,7 @@ module.exports = function(server, app){
 
             let userId      = client.handshake.session.userId;
             let username    = client.handshake.session.passport.user;
-            let status      = 'online';
+            let status      = 'Disponible';
 
             // Update user status
             UserModel.update({_id : userId}, {$set : {status: status}}, function(err, count){
@@ -46,7 +46,7 @@ module.exports = function(server, app){
         client.on('disconnect', function(data){
             let userId = client.handshake.session.userId;
 
-            UserModel.update({_id : userId}, {$set : {status: 'offline'}}, function(err, count){
+            UserModel.update({_id : userId}, {$set : {status: 'Hors ligne'}}, function(err, count){
 
                 if(err){
                     throw err;
@@ -57,10 +57,21 @@ module.exports = function(server, app){
         });
 
 
-        client.on('statusChange', function(data){
+        client.on('userStatusChange', function(data){
 
             let userId = client.handshake.session.userId;
-            client.broadcast.emit('userStatusChanged', { userId: userId, status: data})
+            let cssClass = 'label-' + require('../views/helpers/game/getStatusLabel')(data.newStatus);
+
+            UserModel.update({_id : userId}, {$set : {status: data.newStatus}}, function(err, count){
+
+                if(err){
+                    throw err;
+                }
+                socketIo.emit('userStatusChanged', { userId: userId, newStatus: data.newStatus, cssClass : cssClass });
+
+            });
+
+
 
         })
 

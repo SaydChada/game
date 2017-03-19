@@ -13,7 +13,7 @@ class GamesController extends baseController{
             this.viewVars.helpers['getStatusLabel'] = require(this.helpersDir + 'game/getStatusLabel');
 
             let userModel = this.getModel('users');
-            userModel.find({ _id : {$ne : this.req.user._id}, status : 'online'}, (err, users) => {
+            userModel.find({ _id : {$ne : this.req.user._id}, status : {$ne : 'Hors ligne'}}, (err, users) => {
                 if (err) {
                     throw err;
                 }

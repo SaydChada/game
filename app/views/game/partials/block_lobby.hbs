@@ -2,8 +2,8 @@
 <div class="row users_side_list">
     <div id="custom-search-input">
         <div class="input-group col-md-12">
-            <input type="text" class=" search-query form-control" placeholder="Chercher un utilisateur..." />
-            <button class="btn btn-danger" type="button">
+            <input type="text" class=" search-query form-control" id="search_input" placeholder="Chercher un utilisateur..." />
+            <button class="btn btn-danger" type="button" id="search_submit">
                 <span class=" glyphicon glyphicon-search"></span>
             </button>
         </div>
@@ -15,9 +15,9 @@
             <span class="caret pull-right"></span>
         </button>
         <ul class="dropdown-menu" id="status_menu" aria-labelledby="dropdownMenu">
-            <li><a href="#" class="bg-success" data-value="online">Disponible</a> </li>
-            <li><a href="#" class="bg-warning" data-value="ingame">En partie</a></li>
-            <li><a href="#" class="bg-danger" data-value="afk">Occupé(e)</a></li>
+            <li data-status="Disponible"><a href="#" class="bg-success" >Disponible</a> </li>
+            <li data-status="En partie"><a href="#" class="bg-info" >En partie</a></li>
+            <li data-status="Occupé(e)"><a href="#" class="bg-warning" >Occupé(e)</a></li>
         </ul>
     </div>
     <div class="">

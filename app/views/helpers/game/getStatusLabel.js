@@ -2,13 +2,16 @@ module.exports =
     function getStatusLabel(status){
         let color = 'default';
         switch(status){
-            case 'ingame' :
+            case 'Occupé(e)' :
                 color = 'warning';
                 break;
-            case 'online' :
+            case 'En partie' :
+                color = 'info';
+                break;
+            case 'Disponible' :
                 color = 'success';
                 break;
-            case 'offline' :
+            case 'Hors ligne' :
                 color = 'danger';
                 break;
             default :
