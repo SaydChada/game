@@ -56,7 +56,7 @@ function init(routing, localConf){
         }),
         saveUninitialized : false, // Dont save session on initialisation
         resave: false,  // Dont resave every time client refresh
-        cookie: { secure: false }
+        cookie: { secure: false, maxAge : 24 * 60 * 60 }
     });
     app.use(session);
 
@@ -65,8 +65,27 @@ function init(routing, localConf){
     app.use(passport.session());
     let Account = (require('./app/models/Users')).getMongooseModel();
     passport.use(new LocalStrategy(Account.authenticate()));
-    passport.serializeUser(Account.serializeUser());
-    passport.deserializeUser(Account.deserializeUser());
+    passport.serializeUser(function(user, done){
+        user = {
+            username : user.username,
+            _id      : user._id,
+            status   : user.status,
+            games    : user.games,
+            created  : user.created
+        };
+        done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done){
+        user = {
+            username : user.username,
+            _id      : user._id,
+            status   : user.status,
+            games    : user.games,
+            created  : user.created
+        };
+        done(null, user);
+    });
 
 // Mailer configuration
     const nodemailer = require('nodemailer');

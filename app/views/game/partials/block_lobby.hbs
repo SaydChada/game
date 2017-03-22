@@ -1,11 +1,8 @@
 
-<div class="row users_side_list">
+<div class="row users_side_list" id="block_list">
     <div id="custom-search-input">
         <div class="input-group col-md-12">
-            <input type="text" class=" search-query form-control" id="search_input" placeholder="Chercher un utilisateur..." />
-            <button class="btn btn-danger" type="button" id="search_submit">
-                <span class=" glyphicon glyphicon-search"></span>
-            </button>
+            <input type="text" class="search search-query form-control" placeholder="Chercher un utilisateur..." />
         </div>
     </div>
     <div class="dropdown lobby">
@@ -20,8 +17,8 @@
             <li data-status="Occupé(e)"><a href="#" class="bg-warning" >Occupé(e)</a></li>
         </ul>
     </div>
-    <div class="">
-        <ul class="list-unstyled" id="users_list">
+    <div>
+        <ul class="list-unstyled list" id="users_list">
             {{#if user}}
                 {{#with user}}
                     <div class="bg-primary">

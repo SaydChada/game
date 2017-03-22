@@ -23,10 +23,6 @@ class baseController{
         this.viewVars.flashMessages =  this.req.session.flashMessages || [];
         this.viewVars.helpers = {};
 
-        // Didn't found a better way to store usserId in session, maybe passport can bet conf to do the job
-        if(!this.req.session.userId && this.req.user){
-            this.req.session.userId = this.req.user._id ;
-        }
 
         this.helpersDir = '../views/helpers/';
     }

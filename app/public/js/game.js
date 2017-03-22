@@ -13,23 +13,11 @@ $(document).ready(function(){
      SEARCH BAR
      ========================================================================== */
 
-    $btnSearch.on('click', function(e){
-        e.preventDefault();
-        var search = $inputSearch.val();
+    var options = {
+        valueNames: [ 'username' ]
+    };
 
-        $('.block_user', $userList).each(function(i, el){
-
-            var $el = $(el);
-            if(search.trim() === ''){
-                $el.show();
-            }else{
-                // Hide only those who didn't have div as parent (only ul>li not ul li)
-                $el.hide();
-            }
-        });
-
-        $userList.find('li:contains("'+search+'")').show();
-    });
+    new List('block_list', options);
 
 
     /* ==========================================================================

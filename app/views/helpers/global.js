@@ -1,5 +1,12 @@
 let blocks = Object.create(null);
 
+let debug = function(varToDebug) {
+
+    console.log("==============VIEW DEBUG ==============" );
+    console.log(varToDebug);
+
+};
+
 module.exports =  {
     "extends" : function(name, context) {
         let block = blocks[name];
@@ -16,14 +23,9 @@ module.exports =  {
         blocks[name] = [];
         return val;
     },
-    "debug" : function(optionalValue) {
-
-        console.log("HBS vars : " );
-        console.log("====================");
-        console.log(optionalValue);
-
-    },
-    'xif' : function (v1, operator, v2, options) {
+    "debug" : debug,
+    "dump"  :  debug,
+    'xif'   : function (v1, operator, v2, options) {
 
         switch (operator) {
             case '==':
