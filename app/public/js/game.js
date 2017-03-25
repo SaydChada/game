@@ -141,6 +141,7 @@ $(document).ready(function(){
 
         });
 
+        $maskCommands.addClass('hidden');
         $maskChallenge.removeClass('hidden');
 
     });
