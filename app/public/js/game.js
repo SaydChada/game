@@ -86,9 +86,8 @@ $(document).ready(function(){
 
     // On click user display user's display mask with button handle event
 
-    $('#users_list li').on('click', function(){
+    $userList.on('click','li:not(.bg-primary>li)',{}, function(){
         console.log('clicked li');
-
         var $el = $(this);
         var id = $el.attr('id');
         var socketId = $el.data('socket-id');

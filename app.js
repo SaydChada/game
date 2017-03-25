@@ -56,7 +56,7 @@ function init(routing, localConf){
         }),
         saveUninitialized : false, // Dont save session on initialisation
         resave: false,  // Dont resave every time client refresh
-        cookie: { secure: false, maxAge : 24 * 60 * 60 }
+        cookie: { secure: false,/* maxAge : 24 * 60 * 60*/ }
     });
     app.use(session);
 
