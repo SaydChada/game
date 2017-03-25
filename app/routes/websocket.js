@@ -94,14 +94,32 @@ module.exports = function(server, app){
             let targetSocketId = data.targetSocketId;
             let challengerName = user.username;
 
+            let roomName = + new Date();
+            client.room = roomName;
+            client.join(roomName);
+
             client.to(targetSocketId).emit('requestGame', {
                 targetUserId : targetUserId,
                 targetSocketId : targetSocketId,
+                roomName     : roomName,
+                fromSocketId : client.id,
                 fromUserId : currentUserId,
                 fromUsername : challengerName
             });
 
-        })
+        });
+
+        client.on('acceptGame', function(data){
+
+            console.log('DATA ======> ',data);
+            client.room = data.roomName;
+
+                client.join(data.roomName, function(){
+                    socketIo.sockets.in(data.roomName).emit('StartGame', {roomName : data.roomName});
+                });
+        });
+
+
 
     });
 

@@ -14,6 +14,7 @@ class baseController{
         this.req = req;
         this.next = next;
         this.res = res;
+        this.debug = false;
         this.params = this.req.params;
         this.passport = require('passport');
         this.models = {};
@@ -76,10 +77,12 @@ class baseController{
         }
 
         // LOG
-        console.log('[method] : ', this.req.method);
-        console.log('[viewDir] : "' , this.viewDir,'", [action] "', this.params.action, '"');
-        console.log('==================== [viewVars] ====================== ' );
-        console.dir( this.viewVars, {showHidden : false, depth : 1, color : true});
+        if(this.debug){
+            console.log('[method] : ', this.req.method);
+            console.log('[viewDir] : "' , this.viewDir,'", [action] "', this.params.action, '"');
+            console.log('==================== [viewVars] ====================== ' );
+            console.dir( this.viewVars, {showHidden : false, depth : 1, color : true});
+        }
 
         this.view = path.join(this.viewDir , this.params.action);
 
