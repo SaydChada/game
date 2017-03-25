@@ -71,6 +71,7 @@ function init(routing, localConf){
             _id      : user._id,
             status   : user.status,
             games    : user.games,
+            socketId : user.socketId,
             created  : user.created
         };
         done(null, user);
@@ -82,6 +83,7 @@ function init(routing, localConf){
             _id      : user._id,
             status   : user.status,
             games    : user.games,
+            socketId : user.socketId,
             created  : user.created
         };
         done(null, user);

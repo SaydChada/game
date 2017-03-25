@@ -1,12 +1,12 @@
 "use strict";
 
-const socketIO      = require('socket.io');
+const ws            = require('socket.io');
 const UserModel     = require('../models/Users').getMongooseModel();
 
 module.exports = function(server, app){
 
     console.log('--- SOCKET ENABLED ---');
-    let socketIo = socketIO.listen(server);
+    let socketIo = ws.listen(server);
 
      // client aka socket : because more readable
     socketIo.on('connection', function (client) {
@@ -14,12 +14,18 @@ module.exports = function(server, app){
         // ONly available for logged in users
         if(!client.handshake.session.passport){
             return;
+        }else{
+            // Save socketId in database
+            let user = client.handshake.session.passport.user;
+            UserModel.update({ _id : user._id}, {$set : {socketId : client.id}},function(err){
+            });
         }
 
 
         client.on('userJoin', function(data) {
 
             let status      = 'Disponible';
+            let socketId    = data.socketId;
             let user = client.handshake.session.passport.user;
 
             // Update user status
@@ -32,6 +38,7 @@ module.exports = function(server, app){
                 let dataTemplate = {
                     _id : user._id,
                     username : user.username,
+                    socketId : socketId,
                     status : status,
                     layout: false,
                     helpers : {getStatusLabel : require('../views/helpers/game/getStatusLabel')}
@@ -42,6 +49,8 @@ module.exports = function(server, app){
                     if(err){
                         throw err;
                     }
+                    // Ugly way to fix userStatus refreshing TODO fix that
+                    socketIo.emit('userFixStatus', { userId: user._id, template: hbsTemplate});
                     client.broadcast.emit('userJoin', { userId : user._id, template : hbsTemplate });
                 });
             });
@@ -52,7 +61,7 @@ module.exports = function(server, app){
             // TODO fix bug that when user open two connexion dont remove it untill all co are removed
             let user = client.handshake.session.passport.user;
 
-            UserModel.update({_id : user._id}, {$set : {status: 'Hors ligne'}}, function(err, count){
+            UserModel.update({_id : user._id}, {$set : {status: 'Hors ligne', socketId : ''}}, function(err, count){
 
                 if(err){
                     throw err;
@@ -76,8 +85,21 @@ module.exports = function(server, app){
                 socketIo.emit('userStatusChanged', { userId: user._id, newStatus: data.newStatus, cssClass : cssClass });
 
             });
+        });
 
+        client.on('userRequestGame', function(data){
+            let user = client.handshake.session.passport.user;
+            let currentUserId = user._id;
+            let targetUserId = data.targetUser;
+            let targetSocketId = data.targetSocketId;
+            let challengerName = user.username;
 
+            client.to(targetSocketId).emit('requestGame', {
+                targetUserId : targetUserId,
+                targetSocketId : targetSocketId,
+                fromUserId : currentUserId,
+                fromUsername : challengerName
+            });
 
         })
 

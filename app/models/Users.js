@@ -18,6 +18,7 @@ class Users extends baseModel{
             email       : String,
             status      : { type: String, default: 'offline'},
             password    : String,
+            socketId    : String,
             games       : [{ type: Schema.Types.ObjectId, ref: 'games' }],
             created     : { type: Date, default: Date.now }
         });
