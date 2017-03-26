@@ -19,8 +19,9 @@
     </div>
     <div>
         <ul class="list-unstyled list" id="users_list">
-            {{> block_mask_commands}}
-            {{> block_mask_challenges}}
+            {{> block_mask_commands }}
+            {{> block_mask_challenge }}
+            {{> block_mask_response }}
             {{#if user}}
                 {{#with user}}
                     <div class="bg-primary">

@@ -130,6 +130,7 @@ $(document).ready(function(){
         $('#deny_challenge').on('click', function(e){
             e.preventDefault();
             $('#challenger_name').html('');
+            socket.emit('rejectGame', data);
            $maskChallenge.addClass('hidden');
         });
 

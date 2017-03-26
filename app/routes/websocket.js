@@ -88,6 +88,11 @@ module.exports = function(server, app){
         });
 
         client.on('userRequestGame', function(data){
+
+            if(client.room){
+                socketIo.to(client.id).emit('currentRequestPending', {error : 'Un challenge est déjà en cours'});
+            }
+
             let user = client.handshake.session.passport.user;
             let currentUserId = user._id;
             let targetUserId = data.targetUser;
@@ -111,12 +116,20 @@ module.exports = function(server, app){
 
         client.on('acceptGame', function(data){
 
-            console.log('DATA ======> ',data);
             client.room = data.roomName;
-
                 client.join(data.roomName, function(){
                     socketIo.sockets.in(data.roomName).emit('StartGame', {roomName : data.roomName});
                 });
+        });
+
+        /**
+         * Where userRequestGame bein rejected
+         */
+        client.on('rejectGame', function(data){
+            // Remove roomName
+           socketIo.of('/').connected[data.fromSocketId].room = null;
+
+           socketIo.to(data.fromSocketId).emit('challengeWasRejected', {fromUserName : data.fromUserName});
         });
 
 
