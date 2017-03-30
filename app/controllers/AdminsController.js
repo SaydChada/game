@@ -9,7 +9,7 @@ class AdminsController extends baseController{
 
     indexAction(){
 
-        this.viewVars.title = 'index';
+        this.viewVars.pageTitle = 'index';
         this.render(this.view);
     }
 

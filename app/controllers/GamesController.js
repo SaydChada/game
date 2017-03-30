@@ -9,7 +9,7 @@ class GamesController extends baseController{
     indexAction(){
 
         if(this.req.isAuthenticated()){
-            this.viewVars.title = 'game';
+            this.viewVars.pageTitle = 'game';
             this.viewVars.helpers['getStatusLabel'] = require(this.helpersDir + 'game/getStatusLabel');
 
             let userModel = this.getModel('users');

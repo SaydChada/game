@@ -36,6 +36,7 @@ class UsersController extends baseController{
                 this.viewVars.users = users;
                 this.viewVars.user = this.req.user;
                 this.viewVars.formTitle = 'Inscription';
+                this.viewVars.pageTitle = 'Inscription';
                 this.render(this.view , this.viewVars);
             });
 
@@ -48,7 +49,7 @@ class UsersController extends baseController{
      */
     loginAction(){
         this.viewVars.formTitle = 'Connexion';
-        this.viewVars.title     = 'Connexion';
+        this.viewVars.pageTitle = 'Connexion';
 
         if(this.req.method ==='POST'){
             this.passport.authenticate('local', this.login.bind(this))(this.req, this.res, this.next);

@@ -20,11 +20,8 @@ class baseController{
         this.models = {};
         this.viewDir = '';
 
-        this.viewVars = {url : req.url, user: req.user};
+        this.viewVars = {url : req.url, user: req.user, helpers: {}};
         this.viewVars.flashMessages =  this.req.session.flashMessages || [];
-        this.viewVars.helpers = {};
-
-
         this.helpersDir = '../views/helpers/';
     }
 

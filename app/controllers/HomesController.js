@@ -7,12 +7,12 @@ class HomesController extends baseController{
 
     indexAction(){
 
-        this.viewVars.title = 'index';
+        this.viewVars.pageTitle = 'index';
         this.render(this.view);
     }
 
     contactAction(){
-        this.viewVars.title = 'contact';
+        this.viewVars.pageTitle = 'contact';
         this.viewVars.formTitle = 'Contact';
 
         if(this.req.method ==='POST'){
@@ -41,7 +41,7 @@ class HomesController extends baseController{
     }
 
     aboutAction(){
-        this.viewVars.title = 'a propos';
+        this.viewVars.pageTitle = 'a propos';
         this.render('static/about');
     }
 }
