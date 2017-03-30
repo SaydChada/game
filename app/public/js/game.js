@@ -87,7 +87,6 @@ $(document).ready(function(){
     // On click user display user's display mask with button handle event
 
     $userList.on('click','li:not(.bg-primary>li)',{}, function(){
-        console.log('clicked li');
         var $el = $(this);
         var id = $el.attr('id');
         var socketId = $el.data('socket-id');
@@ -148,7 +147,8 @@ $(document).ready(function(){
     });
 
     socket.on('StartGame', function(data){
-        alert('La partie va commencer!');
+        console.log(data);
+        $('#game_start_block').removeClass('invisible');
     })
 
 

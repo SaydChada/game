@@ -22,6 +22,9 @@ module.exports = function(server, app){
         }
 
 
+        /**
+         * When user join lobby
+         */
         client.on('userJoin', function(data) {
 
             let status      = 'Disponible';
@@ -57,6 +60,9 @@ module.exports = function(server, app){
         });
 
 
+        /**
+         * When user leave
+         */
         client.on('disconnect', function(data){
             // TODO fix bug that when user open two connexion dont remove it untill all co are removed
             let user = client.handshake.session.passport.user;
@@ -72,6 +78,9 @@ module.exports = function(server, app){
         });
 
 
+        /**
+         * When user change his status
+         */
         client.on('userStatusChange', function(data){
 
             let user = client.handshake.session.passport.user;
@@ -87,6 +96,9 @@ module.exports = function(server, app){
             });
         });
 
+        /**
+         * When user request game with another user
+         */
         client.on('userRequestGame', function(data){
 
             if(client.room){
@@ -104,26 +116,60 @@ module.exports = function(server, app){
             client.join(roomName);
 
             client.to(targetSocketId).emit('requestGame', {
-                targetUserId : targetUserId,
-                targetSocketId : targetSocketId,
-                roomName     : roomName,
-                fromSocketId : client.id,
-                fromUserId : currentUserId,
-                fromUsername : challengerName
+                targetUserId    : targetUserId,
+                targetSocketId  : targetSocketId,
+                roomName        : roomName,
+                fromSocketId    : client.id,
+                fromUserId      : currentUserId,
+                fromUsername    : challengerName
             });
 
         });
 
+        /**
+         * When a game is accepted
+         */
         client.on('acceptGame', function(data){
 
             client.room = data.roomName;
                 client.join(data.roomName, function(){
-                    socketIo.sockets.in(data.roomName).emit('StartGame', {roomName : data.roomName});
+                    socketIo.sockets.in(data.roomName).emit('StartGame', data);
                 });
         });
 
         /**
-         * Where userRequestGame bein rejected
+         * When a game in room start
+         */
+        socketIo.sockets.in(client.room).on('startGame', function(data){
+
+            let colors = ['warning','info', 'success', 'primary', 'danger'];
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    let temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+                return array;
+            }
+
+            colors = shuffleArray(colors);
+
+            socketIo.sockets.in(client.room).emit('gameInitiliazed', {colors : colors});
+
+
+        });
+
+        /**
+         * When user in room is ready
+         */
+        socketIo.sockets.in(client.room).on('userRead', function(){
+
+        });
+
+        /**
+         * When userRequestGame bein rejected
          */
         client.on('rejectGame', function(data){
             // Remove roomName

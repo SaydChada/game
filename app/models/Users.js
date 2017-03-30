@@ -16,7 +16,7 @@ class Users extends baseModel{
         this.schema = new Schema({
             username    : String,
             email       : String,
-            status      : { type: String, default: 'offline'},
+            status      : { type: String, default: 'Hors ligne'},
             password    : String,
             socketId    : String,
             games       : [{ type: Schema.Types.ObjectId, ref: 'games' }],

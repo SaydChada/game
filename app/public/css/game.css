@@ -4,6 +4,10 @@
 // =======================================================================//
 */
 
+.invisible {
+    visibility: hidden;
+}
+
 .mask{
     width: 100%;
     height: 100%;
@@ -18,16 +22,8 @@
     opacity:1;
 }
 
-#game_block{
-    height: 513px;
-}
-
 .main_section{
     border: solid 1px #dddddd;
-}
-.users_side_list{
-    border-right: solid 1px;
-    border-color: #dddddd;
 }
 
 /*
@@ -36,9 +32,6 @@
 // =======================================================================//
 */
 
-/*.search-query:focus + button {*/
-    /*z-index: 3;*/
-/*}*/
 
 /* Lobby
    ============================= */
@@ -154,14 +147,27 @@
     border-bottom:none;
 }
 #users_list {
-    height: 412px;
+    height: 436px;
     overflow-x: hidden;
     position: relative;
     overflow-y: auto;
+    margin-bottom: 0;
 }
 
 #users_list>li:hover {
     background-color: #d27b7b;
     color: #fff;
     cursor:pointer;
+}
+
+
+/*
+// =======================================================================//
+//                                Game block                              //
+// =======================================================================//
+*/
+
+
+#game_block{
+    border-left: solid 1px #dddddd;
 }
