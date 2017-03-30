@@ -64,7 +64,6 @@ $(document).ready(function(){
 
     socket.on('userFixStatus', function(data){
 
-
         var userId = data.userId;
         var blockUser = data.template;
 
@@ -84,8 +83,14 @@ $(document).ready(function(){
      DOM EVENTS
      ========================================================================== */
 
-    // On click user display user's display mask with button handle event
 
+    // remove mask on cancel btn click
+    $('#cancel_mask').on('click', function(e){
+        e.preventDefault();
+        $maskCommands.addClass('hidden');
+    });
+
+    // On click user display user's display mask with button handle event
     $userList.on('click','li:not(.bg-primary>li)',{}, function(){
         var $el = $(this);
         var id = $el.attr('id');
@@ -93,20 +98,26 @@ $(document).ready(function(){
 
         var $chalengeUser = $('#chalenge_user');
         var $viewStats    = $('#view_stats');
-        $chalengeUser.on('click', function(e){
+
+        // TODO fix event declaration outside $userList to prevent same event added multiple times
+        // Clean events binded to buttons
+        $chalengeUser.unbind('click');
+        $viewStats.unbind('click');
+
+
+        $chalengeUser.one('click', function(e){
             e.preventDefault();
-             socket.emit('userRequestGame', {targetUser : id, targetSocketId : socketId});
+            socket.emit('userRequestGame', {targetUser : id, targetSocketId : socketId});
             $maskCommands.addClass('hidden');
         });
 
-        $viewStats.on('click', function(e){
+        $viewStats.one('click', function(e){
            e.preventDefault();
+           console.log('click view stat');
+           socket.emit('getUsersInfo', {targetUser: id}, function(response){
+               $(response.template).modal('show');
+           });
            $maskCommands.addClass('hidden');
-        });
-
-        $('#cancel_mask').on('click', function(e){
-            e.preventDefault();
-            $maskCommands.addClass('hidden');
         });
 
         $maskCommands.removeClass('hidden');

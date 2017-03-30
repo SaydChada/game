@@ -9,6 +9,7 @@ class baseModel{
      */
     constructor(document){
         this.db         = dbConnection;
+        this.controller = null;
         this.document   = document;
     }
 
@@ -21,6 +22,22 @@ class baseModel{
             throw new Error('Schema must be defined in children classes');
         }
         return this.db.model(this.document, this.schema);
+    }
+
+    find(query, callback){
+         this.getMongooseModel().find(query, callback);
+    }
+
+    update(query, callback){
+        this.getMongooseModel().update(query, callback);
+    }
+
+    insert(query, callback){
+        this.getMongooseModel().insert(query, callback);
+    }
+
+    remove(query, callback){
+        this.getMongooseModel().remove(query, callback);
     }
 
 }

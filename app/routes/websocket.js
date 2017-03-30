@@ -53,7 +53,7 @@ module.exports = function(server, app){
                         throw err;
                     }
                     // Ugly way to fix userStatus refreshing TODO fix that
-                    socketIo.emit('userFixStatus', { userId: user._id, template: hbsTemplate});
+                    socketIo.to(client.id).emit('userFixStatus', { userId: user._id, template: hbsTemplate});
                     client.broadcast.emit('userJoin', { userId : user._id, template : hbsTemplate });
                 });
             });
@@ -179,14 +179,32 @@ module.exports = function(server, app){
         });
 
 
+        client.on('getUsersInfo', function(data, callback){
 
+            UserModel.findOne({_id : data.targetUser}, function(err, user){
+                if(err){
+                    throw err;
+                }
+
+                let dataTemplate = {
+                    username : user.username,
+                    status : user.status,
+                    email : user.email,
+                    games : user.games,
+                    layout: false,
+                };
+
+                // Get template for the modal which contain data
+                app.render('game/partials/modal_user_data', dataTemplate,  function(err, hbsTemplate){
+                    if(err){
+                        throw err;
+                    }
+                    callback({template : hbsTemplate});
+                });
+
+            });
+        })
     });
 
-
-
-
-
     return socketIo;
-
-
 };

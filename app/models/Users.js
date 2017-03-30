@@ -27,12 +27,14 @@ class Users extends baseModel{
 
     }
 
+
     /**
-     * Find user's played games
-     * @param user
+     * Retrieve online users excluding current user
+     * @param cb
      */
-    findGames(user){
-        // Todo get all played user games
+    getOnlineUsers(cb){
+        let currentUser = this.controller.req.user._id;
+        this.getMongooseModel().find({ _id : {$ne : currentUser}, status : {$ne : 'Hors ligne'}}, cb);
     }
 }
 

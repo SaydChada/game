@@ -98,7 +98,8 @@ class baseController{
         if(!this.models[modelName]){
             let modelPath = path.join('..','models', modelName);
             let model = require(modelPath);
-            this.models[modelName] = model.getMongooseModel();
+            model.controller = this;
+            this.models[modelName] = model;
         }
 
         return this.models[modelName];

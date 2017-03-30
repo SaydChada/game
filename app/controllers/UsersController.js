@@ -76,7 +76,7 @@ class UsersController extends baseController{
      * @param data
      */
     register(data){
-        let userModel = this.getModel('users');
+        let userModel = this.getModel('users').getMongooseModel();
         userModel.register(new userModel(data), data.password, (err, account) => {
             if (err) {
                 throw err;
