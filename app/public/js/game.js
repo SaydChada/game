@@ -14,6 +14,10 @@ $(document).ready(function(){
      SEARCH BAR
      ========================================================================== */
 
+    $('#custom-search-input').on('click', function(e){
+        $(this).children('input').val('');
+    });
+
     var options = {
         valueNames: [ 'username' ]
     };
@@ -113,7 +117,6 @@ $(document).ready(function(){
 
         $viewStats.one('click', function(e){
            e.preventDefault();
-           console.log('click view stat');
            socket.emit('getUsersInfo', {targetUser: id}, function(response){
                $(response.template).modal('show');
            });
