@@ -8,7 +8,9 @@ module.exports = function(server, app){
     console.log('--- SOCKET ENABLED ---');
     let socketIo = ws.listen(server);
 
-     // client aka socket : because more readable
+    socketIo.set('heartbeat timeout', 5);
+
+    // client aka socket : because more readable
     socketIo.on('connection', function (client) {
 
         // ONly available for logged in users
@@ -180,7 +182,7 @@ module.exports = function(server, app){
             client.leave(client.room);
             client.room = null;
 
-           socketIo.to(data.fromSocketId).emit('challengeWasRejected', {fromUserName : data.fromUserName});
+           socketIo.to(data.fromSocketId).emit('challengeWasRejected',  data);
         });
 
 

@@ -27,6 +27,10 @@ function socketGameEvents(socket){
 
     });
 
+    socket.on('challengeWasRejected', function(data){
+        alert(data.fromUsername + ' a rejeté votre défi !!');
+    });
+
     socket.on('StartGame', function(data){
         console.log(data);
         $('#game_start_block').removeClass('invisible');
