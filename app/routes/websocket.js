@@ -164,7 +164,7 @@ module.exports = function(server, app){
         /**
          * When user in room is ready
          */
-        socketIo.sockets.in(client.room).on('userRead', function(){
+        socketIo.sockets.in(client.room).on('userReady', function(){
 
         });
 
@@ -172,8 +172,13 @@ module.exports = function(server, app){
          * When userRequestGame bein rejected
          */
         client.on('rejectGame', function(data){
-            // Remove roomName
-           socketIo.of('/').connected[data.fromSocketId].room = null;
+
+            // Remove roomName and leave
+            let targetSocket = socketIo.of('/').connected[data.fromSocketId];
+            targetSocket.leave(targetSocket.room);
+            targetSocket.room = null;
+            client.leave(client.room);
+            client.room = null;
 
            socketIo.to(data.fromSocketId).emit('challengeWasRejected', {fromUserName : data.fromUserName});
         });

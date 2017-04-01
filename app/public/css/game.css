@@ -36,6 +36,11 @@
 /* Lobby
    ============================= */
 
+#lobby_container{
+    position:relative;
+    height: 436px;
+}
+
 .lobby button {
     background: #f5f3f3 none repeat scroll 0 0;
     border: 1px solid #dddddd;
@@ -147,9 +152,7 @@
     border-bottom:none;
 }
 #users_list {
-    height: 436px;
     overflow-x: hidden;
-    position: relative;
     overflow-y: auto;
     margin-bottom: 0;
 }

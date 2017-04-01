@@ -1,87 +1,30 @@
 $(document).ready(function(){
 
-    // getting server
-    var server = $('#game').data('server');
-
     // Jquery elements
     var $userList = $('#users_list');
-    var $statusMenu = $('#status_menu');
     var $maskCommands = $('#mask_commands');
-    var $maskChallenge = $('#mask_challenge');
-    var $rooms = $('#rooms');
+
+    // socket connection
+    var socket = io.connect($('#game').data('server'));
 
     /* ==========================================================================
      SEARCH BAR
      ========================================================================== */
 
-    $('#custom-search-input').on('click', function(e){
-        $(this).children('input').val('');
-    });
-
-    var options = {
-        valueNames: [ 'username' ]
-    };
-    new List('block_list', options);
+    enableSearchBar();
 
     /* ==========================================================================
      LOBBY
      ========================================================================== */
 
 
-    var socket = io.connect(server);
-
-    socket.on('connect', function() {
-        socket.emit('userJoin', {socketId : socket.id});
-
-    });
-
-
-    socket.on('userLeave', function(data){
-        var $userBlock = $("#" + data.userId);
-        $userBlock && $userBlock.remove();
-    });
-
-    socket.on('userJoin', function(data){
-        var userId = data.userId;
-        var blockUser = data.template;
-
-        // Check if block already exist then ifnot append it to parent
-        var existingBlockUser = $('#' + userId).length;
-        if(!existingBlockUser){
-            $userList.append($(blockUser));
-        }
-    });
-
-    socket.on('userStatusChanged', function(data){
-        var userId   = data.userId;
-        var status   = data.newStatus;
-        var cssClass = data.cssClass;
-        var $blockUser = $('#' + userId);
-
-        var $spanLabel = $('.status_label', $blockUser);
-
-        $spanLabel.removeClass('label-warning label-info label-success label-danger');
-        $spanLabel.addClass(cssClass);
-        $spanLabel.html(status);
-
-    });
-
-    socket.on('userFixStatus', function(data){
-
-        var userId = data.userId;
-        var blockUser = data.template;
-
-        var existingBlockUser = $('#' + userId);
-        if(existingBlockUser.length){
-            existingBlockUser.replaceWith($(blockUser));
-        }
-
-    });
+    socketLobbyEvents(socket);
 
     /* ==========================================================================
      GAME
      ========================================================================== */
 
+    socketGameEvents(socket);
 
     /* ==========================================================================
      DOM EVENTS
@@ -127,43 +70,9 @@ $(document).ready(function(){
 
     });
 
-    // Attach event to all li in status change menu
-    $('li', $statusMenu).each(function(i, el){
-        var $el = $(el);
-        $el.on('click', function(e){
-            e.preventDefault();
-            var newStatus = $el.data('status');
-            socket.emit('userStatusChange', {newStatus : newStatus});
-        })
-    });
 
-    socket.on('requestGame', function(data){
-        $('#challenger_name').html(data.fromUsername);
+    enableStatusChange(socket);
 
-        $('#deny_challenge').on('click', function(e){
-            e.preventDefault();
-            $('#challenger_name').html('');
-            socket.emit('rejectGame', data);
-           $maskChallenge.addClass('hidden');
-        });
-
-        $('#accept_challenge').on('click', function(e){
-            e.preventDefault();
-            $('#challenger_name').html('');
-            socket.emit('acceptGame', data);
-            $maskChallenge.addClass('hidden');
-
-        });
-
-        $maskCommands.addClass('hidden');
-        $maskChallenge.removeClass('hidden');
-
-    });
-
-    socket.on('StartGame', function(data){
-        console.log(data);
-        $('#game_start_block').removeClass('invisible');
-    })
 
 
 });
