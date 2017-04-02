@@ -69,8 +69,10 @@ function init(routing, localConf){
     passport.deserializeUser(localConf.passport.serializeStrategy);
 
 // Mailer configuration
-    const nodemailer = require('nodemailer');
-    global.mailTransporter = nodemailer.createTransport(localConf.mail);
+    if(localConf.mail){
+        const nodemailer = require('nodemailer');
+        global.mailTransporter = nodemailer.createTransport(localConf.mail);
+    }
 
 
     /**
