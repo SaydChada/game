@@ -156,6 +156,7 @@ function socketGameEvents(socket){
                     if(response){
                         $gameUserChoices.attr( "class", '' );
                         $gameUserChoices.addClass('bg-success');
+                        $('#result_game').html('Gagné').attr('class','text-center');
                         socket.emit('endGame', {});
                     }else{
                         // Case when not good
