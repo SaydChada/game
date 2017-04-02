@@ -266,7 +266,7 @@ module.exports = function(server, app){
                 if(data.userColors.join() == client.gameColors.join()){
                     callback(true);
                     client.winTheGame = true;
-                    socketIo.sockets.in(client.room).emit('gameFinished', data);
+                    socketIo.sockets.in(client.room).emit('gameFinished', {winner : client.id});
                 }else{
                     callback(false)
                 }

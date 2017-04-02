@@ -80,10 +80,8 @@ function socketGameEvents(socket){
     // Display timer to user before game start
     socket.on('gameTimer', function(data){
 
-        console.log(data.countdown);
         if(data.countdown === 0){
             $('#countdown_block').remove();
-
             socket.emit('gameStart', true);
         }else{
             $('#countdown').html(data.countdown);
@@ -99,11 +97,12 @@ function socketGameEvents(socket){
         $gameUserChoices.attr( "class", '' );
         clickedColors = [];
         lastRemovedIndexes = [];
+        $('#result_game').html('&nbsp;');
 
         $('#game_combinaison').append($(data.template));
         setTimeout(function(){
             $('#game_combinaison').children('.btn').attr('class', 'btn btn-default');
-        }, 5000);
+        }, 3000);
     });
 
     /**
@@ -112,7 +111,16 @@ function socketGameEvents(socket){
     socket.on('gameFinished', function(data){
         $('#game_combinaison').empty();
         $('#block_vs').remove();
-        console.log('fin de la parie');
+
+        if(socket.id === data.winner){
+            $('#result_game').html('Gagné').attr('class','text-center');
+            console.log('vous avez gagné');
+        }
+        else{
+            $('#result_game').html('Perdu').attr('class','text-center');
+            console.log('vous avez perdu');
+
+        }
         socket.emit('afterGameFinished');
     });
 
@@ -156,7 +164,6 @@ function socketGameEvents(socket){
                     if(response){
                         $gameUserChoices.attr( "class", '' );
                         $gameUserChoices.addClass('bg-success');
-                        $('#result_game').html('Gagné').attr('class','text-center');
                         socket.emit('endGame', {});
                     }else{
                         // Case when not good
