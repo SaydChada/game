@@ -6,13 +6,22 @@ function socketLobbyEvents(socket){
 
 
     socket.on('connect', function() {
-        socket.emit('userJoin', {socketId : socket.id});
+        socket.emit('userJoin', {socketId : socket.id}, function(data){
+                var userId = data.userId;
+                var blockUser = data.template;
+
+                var existingBlockUser = $('#' + userId);
+                if(existingBlockUser.length){
+                    existingBlockUser.replaceWith($(blockUser));
+            }
+        });
 
     });
 
     socket.on('userLeave', function(data){
         var $userBlock = $("#" + data.userId);
-        $('#game_start_block').hasClass('invisible') || $('#game_start_block').addClass('invisible');
+        // TODO remove only for users in a room where a user leave
+        // $('#game_start_block').hasClass('invisible') || $('#game_start_block').addClass('invisible');
         $userBlock && $userBlock.remove();
     });
 
@@ -42,6 +51,7 @@ function socketLobbyEvents(socket){
         var $el = $(this);
         var id = $el.attr('id');
         var socketId = $el.data('socket-id');
+        var username = $('.username', $el).html();
 
         var $chalengeUser = $('#chalenge_user');
         var $viewStats    = $('#view_stats');
@@ -54,7 +64,7 @@ function socketLobbyEvents(socket){
 
         $chalengeUser.one('click', function(e){
             e.preventDefault();
-            socket.emit('userRequestGame', {targetUser : id, targetSocketId : socketId});
+            socket.emit('userRequestGame', {targetUsername : username, targetUser : id, targetSocketId : socketId});
             $maskCommands.addClass('hidden');
         });
 

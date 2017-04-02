@@ -25,14 +25,15 @@ class HomesController extends baseController{
                 if(err){
                     throw err;
                 }
-                console.log('email sended');
-                this.res.session.flashMessages.push({
+
+                this.viewVars.flashMessages.push({
                     type: 'success',
                     message: 'Merci, votre message a bien été envoyé'
                 });
 
                 this.render('static/contact');
             });
+
         }else{
             this.render('static/contact');
         }

@@ -3,14 +3,23 @@ function socketGameEvents(socket){
 
     var $maskCommands = $('#mask_commands');
     var $maskChallenge = $('#mask_challenge');
+    var $gameUserChoices = $('#game_user_choice');
+    var clickedColors = [];
+    var colorsCombinaison = [];
+    var lastRemovedIndexes = [];
+
+    socket.on('userLeaveRoom', function(data){
+        alert('"'+ data.username +'" a quitté la partie');
+        $('#block_vs').length && $('#block_vs').remove();
+    });
 
     socket.on('requestGame', function(data){
         $('#challenger_name').html(data.fromUsername);
 
         var $acceptBtn = $('#accept_challenge');
         var $rejectBtn = $('#deny_challenge');
-        
-        
+
+
         $rejectBtn.unbind('click');
         $acceptBtn.unbind('click');
 
@@ -39,13 +48,72 @@ function socketGameEvents(socket){
     });
 
     socket.on('challengeWasAccepted', function(data){
-        console.log(data);
-        socket.emit('startGame', data);
-        $('#game_start_block').removeClass('invisible');
+
+        $('#game_start_block').prepend($(data.template));
+
+        socket.emit('gameWillBegin', data);
     });
 
     socket.on('gameWillBegin', function(data){
+        socket.emit('startGame', data);
         console.log('gameInitiliazed', data);
     });
+
+
+    /* ==========================================================================
+     DOM EVENTS
+     ========================================================================== */
+
+    $('.btn', '#game_user_choice').on('click', function(){
+
+        console.log('clickedColors', clickedColors);
+
+        var color = $(this).data('color');
+
+        // Get indexOf color (-1 if not found)
+        var checkColorInArray = clickedColors.indexOf(color);
+
+        console.log('checkColorInArray : ', checkColorInArray);
+        if(checkColorInArray === -1){
+
+            if(lastRemovedIndexes[0]){
+                clickedColors[lastRemovedIndexes[0] -1] = color;
+                $(this).html(lastRemovedIndexes[0]);
+                lastRemovedIndexes.shift();
+
+            }else{
+                clickedColors.push(color);
+                $(this).html(clickedColors.length);
+            }
+
+            lastRemovedIndex = null;
+
+            if(clickedColors.length === 5){
+
+                socket.emit('checkUserColors',
+                    {usersColors : clickedColors, colorsCombinaison : colorsCombinaison},
+                    function(response){
+                    if(response){
+                        socket.emit('endGame', {});
+                    }else{
+
+                        $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
+                    }
+                });
+            }else{
+                $gameUserChoices.hasClass('bg-danger') && $gameUserChoices.removeClass('bg-danger');
+            }
+
+            console.log('clickedColors::push', clickedColors);
+        }else{
+            lastRemovedIndexes.push($(this).html());
+            $(this).html('?');
+            clickedColors[checkColorInArray] = null;
+            // Sort array to always have the wright order for user
+            lastRemovedIndexes.sort();
+            console.log('clickedColors::splice', clickedColors);
+        }
+
+    })
 
 }

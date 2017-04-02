@@ -1,5 +1,5 @@
 module.exports = {
-    service: 'transport',
+    service: 'TRANSPORT-NAME',
     auth: {
         user: 'LOGIN-HERE',
         pass: 'PASSWORD-HERE'

@@ -30,7 +30,7 @@ module.exports = function(server, app){
         /**
          * When user join lobby
          */
-        client.on('userJoin', function(data) {
+        client.on('userJoin', function(data, callback) {
 
             let status      = 'Disponible';
             let socketId    = data.socketId;
@@ -57,8 +57,9 @@ module.exports = function(server, app){
                     if(err){
                         throw err;
                     }
-                    // Ugly way to fix userStatus refreshing TODO fix that
-                    socketIo.to(client.id).emit('userFixStatus', { userId: user._id, template: hbsTemplate});
+
+                    // Fix client status after change (because passport lose last information)
+                    callback({ userId: user._id, template: hbsTemplate});
                     client.broadcast.emit('userJoin', { userId : user._id, template : hbsTemplate });
                 });
             });
@@ -77,14 +78,19 @@ module.exports = function(server, app){
                 if(err){
                     throw err;
                 }
+
+                // If user was in room
+                if(client.room){
+                    let data = {
+                        userId :user._id, username : user.username, userSocketId : client.id,
+                    };
+                    socketIo.sockets.in(client.room).emit('userLeaveRoom', data);
+                }
+
+                // Also broadcast to all users to update lobby players list
                 client.broadcast.emit('userLeave', { userId : user._id });
 
             });
-        });
-
-        client.on('connect_timeout', function(){
-           console.log('connection timeout');
-
         });
 
 
@@ -117,6 +123,7 @@ module.exports = function(server, app){
 
             let user = client.handshake.session.passport.user;
             let currentUserId = user._id;
+            let targetUsername = data.targetUsername;
             let targetUserId = data.targetUser;
             let targetSocketId = data.targetSocketId;
             let challengerName = user.username;
@@ -128,6 +135,7 @@ module.exports = function(server, app){
             client.to(targetSocketId).emit('requestGame', {
                 targetUserId    : targetUserId,
                 targetSocketId  : targetSocketId,
+                targetUsername  : targetUsername,
                 roomName        : roomName,
                 fromSocketId    : client.id,
                 fromUserId      : currentUserId,
@@ -138,12 +146,33 @@ module.exports = function(server, app){
 
         /**
          * When a game is accepted
+         * P1 challenger and P2 the one who accept the challenge
          */
         client.on('acceptGame', function(data){
 
             client.room = data.roomName;
                 client.join(data.roomName, function(){
-                    socketIo.sockets.in(data.roomName).emit('gameWillBegin', data);
+
+                    data = {
+                        roomName : data.roomName,
+                        p1 : {id :  data.fromUserId, username : data.fromUsername, socket : data.fromSocketId},
+                        p2 : {id : data.targetUserId, username : data.targetUsername, socket : data.targetSocketId}
+                    };
+
+                    let dataTemplate =  {layout : false, data};
+
+                    console.log('acceptGame', data);
+
+                    app.render('game/partials/block_vs',dataTemplate,  function(err, hbsTemplate){
+                        if(err){
+                            throw err;
+                        }
+
+                        data.template = hbsTemplate;
+                        socketIo.sockets.in(data.roomName).emit('challengeWasAccepted', data);
+                    });
+
+
                 });
         });
 

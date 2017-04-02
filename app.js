@@ -68,6 +68,7 @@ function init(routing, localConf){
     passport.serializeUser(function(user, done){
         user = {
             username : user.username,
+            email    : user.email,
             _id      : user._id,
             status   : user.status,
             games    : user.games,
@@ -80,6 +81,7 @@ function init(routing, localConf){
     passport.deserializeUser(function(user, done){
         user = {
             username : user.username,
+            email    : user.email,
             _id      : user._id,
             status   : user.status,
             games    : user.games,

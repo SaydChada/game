@@ -25,16 +25,4 @@ function socketStatusEvents(socket){
         $spanLabel.html(status);
 
     });
-
-    socket.on('userFixStatus', function(data){
-
-        var userId = data.userId;
-        var blockUser = data.template;
-
-        var existingBlockUser = $('#' + userId);
-        if(existingBlockUser.length){
-            existingBlockUser.replaceWith($(blockUser));
-        }
-
-    });
 }
