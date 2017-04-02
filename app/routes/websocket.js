@@ -342,7 +342,8 @@ module.exports = function(server, app){
                     username : user.username,
                     status : user.status,
                     email : user.email,
-                    games : user.games,
+                    total_score : user.total_score,
+                    games : user.games.length,
                     layout: false,
                 };
 
