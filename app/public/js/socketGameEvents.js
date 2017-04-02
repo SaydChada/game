@@ -78,6 +78,9 @@ function socketGameEvents(socket){
 
     socket.on('gameBegin', function(data){
         $('#game_combinaison').append($(data.template));
+        // setTimeout(function(){
+        //     $('#game_combinaison').empty();
+        // }, 5000);
     });
 
 
@@ -112,17 +115,20 @@ function socketGameEvents(socket){
             if(clickedColors.length === 5){
 
                 socket.emit('checkUserColors',
-                    {usersColors : clickedColors, colorsCombinaison : colorsCombinaison},
+                    {userColors : clickedColors},
                     function(response){
                     if(response){
+                        $gameUserChoices.attr( "class", '' );
+                        $gameUserChoices.addClass('bg-success');
                         socket.emit('endGame', {});
                     }else{
-
+                        $gameUserChoices.attr( "class", '' );
                         $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
                     }
                 });
             }else{
-                $gameUserChoices.hasClass('bg-danger') && $gameUserChoices.removeClass('bg-danger');
+                $gameUserChoices.attr( "class", '' );
+                $gameUserChoices.hasClass('bg-default') && $gameUserChoices.removeClass('bg-default');
             }
 
             console.log('clickedColors::push', clickedColors);

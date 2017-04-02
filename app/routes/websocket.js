@@ -96,6 +96,7 @@ module.exports = function(server, app){
 
         /**
          * When user change his status
+         * TODO bug front user have to change twice before dom change
          */
         client.on('userStatusChange', function(data){
 
@@ -186,8 +187,12 @@ module.exports = function(server, app){
         });
 
 
+        /**
+         * Before game start display countdown and get array shuffled
+         */
         client.on('gameWillBegin', function(){
 
+            // TODO array colors here and pass it to clients
             let countdown = 10;
 
             let interval = setInterval(function() {
@@ -221,8 +226,8 @@ module.exports = function(server, app){
                 return array;
             }
 
-            colors = shuffleArray(colors);
-            let dataTemplate = {colors : colors, layout : false};
+            client.gameColors = shuffleArray(colors);
+            let dataTemplate = {colors : client.gameColors, layout : false};
 
             // Rendering block combinaison (the real game begin)
             app.render('game/partials/block_combinaison', dataTemplate,  function(err, hbsTemplate){
@@ -230,20 +235,28 @@ module.exports = function(server, app){
                     throw err;
                 }
 
-                console.log(hbsTemplate);
-
-                socketIo.to(client.id).emit('gameBegin', {template : hbsTemplate, colors : colors});
+                socketIo.to(client.id).emit('gameBegin', {template : hbsTemplate, colors : client.gameColors});
             });
-
-
-
-
         });
 
+
         /**
-         * When user in room is ready
+         * Check if user choice match gameColors
          */
-        socketIo.sockets.in(client.room).on('userReady', function(){
+        client.on('checkUserColors', function(data, callback){
+
+            if(client.room && client.gameColors){
+
+                // console.log('user colors =>' , data.userColors);
+                // console.log('game colors =>', client.gameColors);
+                if(data.userColors.join() == client.gameColors.join()){
+                    callback(true);
+                }else{
+                    callback(false)
+                }
+            }
+
+
 
         });
 
