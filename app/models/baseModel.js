@@ -24,15 +24,15 @@ class baseModel{
         return this.db.model(this.document, this.schema);
     }
 
-    find(query, callback){
-         this.getMongooseModel().find(query, callback);
+    find(query, callback, projection, options){
+         this.getMongooseModel().find(query, projection, options, callback);
     }
 
-    update(query, callback){
-        this.getMongooseModel().update(query, callback);
+    update(query, callback, options){
+        this.getMongooseModel().update(query, options, callback);
     }
 
-    insert(query, callback){
+    insert(query, callback, options){
         this.getMongooseModel().insert(query, callback);
     }
 

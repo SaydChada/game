@@ -7,8 +7,18 @@ class HomesController extends baseController{
 
     indexAction(){
 
-        this.viewVars.pageTitle = 'index';
-        this.render(this.view);
+        let userModel = this.getModel('users');
+
+        userModel.find({}, (err, users) => {
+            if (err) {
+                throw err;
+            }
+            this.viewVars.users = users;
+            this.viewVars.pageTitle = 'index';
+            this.render(this.view);
+        },null, {sort : {total_score : -1}});
+
+
     }
 
     contactAction(){
