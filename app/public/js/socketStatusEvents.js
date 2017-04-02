@@ -12,6 +12,9 @@ function socketStatusEvents(socket){
         })
     });
 
+    /**
+     * When user changed his status, handle that event and update dom
+     */
     socket.on('userStatusChanged', function(data){
         var userId   = data.userId;
         var status   = data.newStatus;

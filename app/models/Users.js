@@ -20,6 +20,7 @@ class Users extends baseModel{
             password    : String,
             socketId    : String,
             games       : [{ type: Schema.Types.ObjectId, ref: 'games' }],
+            total_score : {type : Number, default : 0},
             created     : { type: Date, default: Date.now }
         });
 

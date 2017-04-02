@@ -4,8 +4,10 @@ function socketGameEvents(socket){
     var $maskCommands = $('#mask_commands');
     var $maskChallenge = $('#mask_challenge');
     var $gameUserChoices = $('#game_user_choice');
+
+    // handle user's colors selection
     var clickedColors = [];
-    var colorsCombinaison = [];
+    // handle user's removed colors indexes
     var lastRemovedIndexes = [];
 
     socket.on('userLeaveRoom', function(data){
@@ -17,11 +19,18 @@ function socketGameEvents(socket){
      Challenge events
      ========================================================================== */
 
+    /**
+     * You can't challenge user that is already in a game
+     */
     socket.on('userAlreadyInGame', function(data){
         // alert('"' + data.fromUsername + '" est en pleine partie !!');
         console.log(data);
     });
 
+    /**
+     * When user reuest game
+     * Attach events to reject and accept btn to targeted user
+     */
     socket.on('requestGame', function(data){
         $('#challenger_name').html(data.fromUsername);
 
@@ -52,18 +61,23 @@ function socketGameEvents(socket){
 
     });
 
+    /**
+     * When user reject another user request challenge
+     */
     socket.on('challengeWasRejected', function(data){
         alert('"' + data.fromUsername + '" a rejeté votre défi !!');
     });
 
+    /**
+     * On acceptation emit game will begin to prevent other user
+     */
     socket.on('challengeWasAccepted', function(data){
 
         $('#game_start_block').prepend($(data.template));
-
-        socket.emit('gameWillBegin', data);
+        socket.emit('gameWillBegin', {});
     });
 
-
+    // Display timer to user before game start
     socket.on('gameTimer', function(data){
 
         console.log(data.countdown);
@@ -76,11 +90,30 @@ function socketGameEvents(socket){
         }
     });
 
+    /**
+     * Game start here
+     */
     socket.on('gameBegin', function(data){
+        // Reset user colors choice
+        $gameUserChoices.children('.btn').html('?');
+        $gameUserChoices.attr( "class", '' );
+        clickedColors = [];
+        lastRemovedIndexes = [];
+
         $('#game_combinaison').append($(data.template));
         // setTimeout(function(){
         //     $('#game_combinaison').empty();
         // }, 5000);
+    });
+
+    /**
+     * Game end here
+     */
+    socket.on('gameFinished', function(data){
+        $('#game_combinaison').empty();
+        $('#block_vs').remove();
+        console.log('fin de la parie');
+        socket.emit('afterGameFinished');
     });
 
 
@@ -90,16 +123,17 @@ function socketGameEvents(socket){
 
     $('.btn', '#game_user_choice').on('click', function(){
 
-        console.log('clickedColors', clickedColors);
+        // console.log('clickedColors', clickedColors);
 
         var color = $(this).data('color');
 
         // Get indexOf color (-1 if not found)
         var checkColorInArray = clickedColors.indexOf(color);
 
-        console.log('checkColorInArray : ', checkColorInArray);
+        // Color not in array we add it
         if(checkColorInArray === -1){
 
+            // Check if user removed color previously and if so color to add get position of last removed
             if(lastRemovedIndexes[0]){
                 clickedColors[lastRemovedIndexes[0] -1] = color;
                 $(this).html(lastRemovedIndexes[0]);
@@ -112,16 +146,19 @@ function socketGameEvents(socket){
 
             lastRemovedIndex = null;
 
+            // If all colors was selected socket to server to check if order colors is good
             if(clickedColors.length === 5){
 
                 socket.emit('checkUserColors',
                     {userColors : clickedColors},
                     function(response){
+                    // Case colors good so display event endGame
                     if(response){
                         $gameUserChoices.attr( "class", '' );
                         $gameUserChoices.addClass('bg-success');
                         socket.emit('endGame', {});
                     }else{
+                        // Case when not good
                         $gameUserChoices.attr( "class", '' );
                         $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
                     }
@@ -131,14 +168,16 @@ function socketGameEvents(socket){
                 $gameUserChoices.hasClass('bg-default') && $gameUserChoices.removeClass('bg-default');
             }
 
-            console.log('clickedColors::push', clickedColors);
+            // console.log('clickedColors::push', clickedColors);
         }else{
+            // Case when user want to remove a color
             lastRemovedIndexes.push($(this).html());
             $(this).html('?');
             clickedColors[checkColorInArray] = null;
+
             // Sort array to always have the wright order for user
             lastRemovedIndexes.sort();
-            console.log('clickedColors::splice', clickedColors);
+            // console.log('clickedColors::splice', clickedColors);
         }
 
     })

@@ -5,7 +5,11 @@ function socketLobbyEvents(socket){
     var $maskCommands = $('#mask_commands');
 
 
+    /**
+     * Basicaly when user load the page where this script run
+     */
     socket.on('connect', function() {
+        // Prevent other user than another joined the lobby
         socket.emit('userJoin', {socketId : socket.id}, function(data){
                 var userId = data.userId;
                 var blockUser = data.template;
@@ -18,6 +22,9 @@ function socketLobbyEvents(socket){
 
     });
 
+    /**
+     * Prevent other user that a user leave
+     */
     socket.on('userLeave', function(data){
         var $userBlock = $("#" + data.userId);
         // TODO remove only for users in a room where a user leave
@@ -25,6 +32,10 @@ function socketLobbyEvents(socket){
         $userBlock && $userBlock.remove();
     });
 
+
+    /**
+     * When user join update dom
+     */
     socket.on('userJoin', function(data){
         var userId = data.userId;
         var blockUser = data.template;
@@ -62,12 +73,18 @@ function socketLobbyEvents(socket){
         $viewStats.unbind('click');
 
 
+        /**
+         * To challenge another user event handler
+         */
         $chalengeUser.one('click', function(e){
             e.preventDefault();
             socket.emit('userRequestGame', {targetUsername : username, targetUser : id, targetSocketId : socketId});
             $maskCommands.addClass('hidden');
         });
 
+        /**
+         * Display stats to user after click in the wright button
+         */
         $viewStats.one('click', function(e){
             e.preventDefault();
             socket.emit('getUsersInfo', {targetUser: id}, function(response){
@@ -76,6 +93,7 @@ function socketLobbyEvents(socket){
             $maskCommands.addClass('hidden');
         });
 
+        // Always remove mask
         $maskCommands.removeClass('hidden');
 
     });

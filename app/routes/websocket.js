@@ -2,6 +2,7 @@
 
 const ws            = require('socket.io');
 const UserModel     = require('../models/Users').getMongooseModel();
+const GameModel     = require('../models/Games').getMongooseModel();
 
 module.exports = function(server, app){
 
@@ -119,7 +120,7 @@ module.exports = function(server, app){
         client.on('userRequestGame', function(data){
 
             let targetSocket = socketIo.of('/').connected[data.targetSocketId];
-            if(targetSocket.room){
+            if(targetSocket && targetSocket.room){
                 socketIo.to(client.id).emit('userAlreadyInGame', {error : 'Un challenge est déjà en cours'});
                 return;
             }
@@ -128,6 +129,13 @@ module.exports = function(server, app){
 
             let roomName = + new Date();
             client.room = roomName;
+            client.isPlayer = 'p1';
+            client.gameMetaData = {
+                roomName : client.room,
+                p1 : {id : user._id, username : user.username, socket : client.id},
+                p2 : {id : data.targetUser, username : data.targetUsername, socket : data.targetSocketId}
+            };
+
             client.join(roomName);
 
             data = {
@@ -150,14 +158,21 @@ module.exports = function(server, app){
          */
         client.on('acceptGame', function(data){
 
-            client.room = data.roomName;
-            client.join(data.roomName, function(){
+            data = {
+                roomName : data.roomName,
+                p1 : {id : data.fromUserId, username : data.fromUsername, socket : data.fromSocketId},
+                p2 : {id : data.targetUserId, username : data.targetUsername, socket : data.targetSocketId}
+            };
 
-                data = {
-                    roomName : data.roomName,
-                    p1 : {id :  data.fromUserId, username : data.fromUsername, socket : data.fromSocketId},
-                    p2 : {id : data.targetUserId, username : data.targetUsername, socket : data.targetSocketId}
-                };
+            client.room = data.roomName;
+
+            // Set meta data to be saved after game end
+            client.gameMetaData         = data;
+            client.isPlayer             = 'p2';
+
+            // Joining room
+            client.join(client.room, function(){
+
                 let dataTemplate =  {layout : false, data};
 
                 // Update both users status
@@ -211,11 +226,10 @@ module.exports = function(server, app){
          */
         client.on('gameStart', function(data){
 
-            console.log('StarGameEvent');
-
-
+            // Colors to display to end user
             let colors = ['warning','info', 'success', 'primary', 'danger'];
 
+            // Shuffle colors
             function shuffleArray(array) {
                 for (let i = array.length -1 ; i > 0; i--) {
                     let j = Math.floor(Math.random() * i);
@@ -251,12 +265,53 @@ module.exports = function(server, app){
                 // console.log('game colors =>', client.gameColors);
                 if(data.userColors.join() == client.gameColors.join()){
                     callback(true);
+                    client.winTheGame = true;
+                    socketIo.sockets.in(client.room).emit('gameFinished', data);
                 }else{
                     callback(false)
                 }
             }
+        });
 
+        client.on('afterGameFinished', function(){
 
+            let score = client.winTheGame ? 1 : 0;
+            let p1_score;
+            let p2_score;
+
+            // If current client is player 1 so score p1 = his score
+            // Else his score = p2 score
+            if(client.isPlayer === 'p1'){
+                p1_score = score;
+                p2_score = + !score;
+
+            }else{
+                p1_score = + !score;
+                p2_score = score;
+            }
+
+            let game = new GameModel();
+
+            game.room_name = client.gameMetaData.roomName;
+            game.p1 = client.gameMetaData.p1.id;
+            game.p2 = client.gameMetaData.p2.id;
+            game.p1_score = p1_score;
+            game.p2_score = p2_score;
+            game.save(function(err, newGame){
+                if(err){
+                    throw err;
+                }
+                // Update user total score
+                UserModel.update({ _id : client.gameMetaData[client.isPlayer].id},
+                    {$inc: {total_score: score}, $push :{ games : newGame}, $set : {status : 'Disponible'} },
+                    function(err){
+                    if(err){
+                        throw err;
+                    }
+                    client.room = null;
+                });
+
+            });
 
         });
 

@@ -14,10 +14,8 @@ class Games extends baseModel{
         let Schema = this.db.Schema;
         this.schema = new Schema({
             room_name   : String,
-            email       : String,
-            duration    : String,
-            p1          :  [{ type: Schema.Types.ObjectId, ref: 'users' }],
-            p2          :  [{ type: Schema.Types.ObjectId, ref: 'users' }],
+            p1          :  { type: Schema.Types.ObjectId, ref: 'users' },
+            p2          :  { type: Schema.Types.ObjectId, ref: 'users' },
             p1_score    : Number,
             p2_score    : Number,
             created     : { type: Date, default: Date.now }
