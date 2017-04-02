@@ -13,6 +13,15 @@ function socketGameEvents(socket){
         $('#block_vs').length && $('#block_vs').remove();
     });
 
+    /* ==========================================================================
+     Challenge events
+     ========================================================================== */
+
+    socket.on('userAlreadyInGame', function(data){
+        // alert('"' + data.fromUsername + '" est en pleine partie !!');
+        console.log(data);
+    });
+
     socket.on('requestGame', function(data){
         $('#challenger_name').html(data.fromUsername);
 
@@ -54,9 +63,21 @@ function socketGameEvents(socket){
         socket.emit('gameWillBegin', data);
     });
 
-    socket.on('gameWillBegin', function(data){
-        socket.emit('startGame', data);
-        console.log('gameInitiliazed', data);
+
+    socket.on('gameTimer', function(data){
+
+        console.log(data.countdown);
+        if(data.countdown === 0){
+            $('#countdown_block').remove();
+
+            socket.emit('gameStart', true);
+        }else{
+            $('#countdown').html(data.countdown);
+        }
+    });
+
+    socket.on('gameBegin', function(data){
+        $('#game_combinaison').append($(data.template));
     });
 
 

@@ -65,31 +65,8 @@ function init(routing, localConf){
     app.use(passport.session());
     let Account = (require('./app/models/Users')).getMongooseModel();
     passport.use(new LocalStrategy(Account.authenticate()));
-    passport.serializeUser(function(user, done){
-        user = {
-            username : user.username,
-            email    : user.email,
-            _id      : user._id,
-            status   : user.status,
-            games    : user.games,
-            socketId : user.socketId,
-            created  : user.created
-        };
-        done(null, user);
-    });
-
-    passport.deserializeUser(function(user, done){
-        user = {
-            username : user.username,
-            email    : user.email,
-            _id      : user._id,
-            status   : user.status,
-            games    : user.games,
-            socketId : user.socketId,
-            created  : user.created
-        };
-        done(null, user);
-    });
+    passport.serializeUser(localConf.passport.serializeStrategy);
+    passport.deserializeUser(localConf.passport.serializeStrategy);
 
 // Mailer configuration
     const nodemailer = require('nodemailer');

@@ -8,7 +8,7 @@ module.exports = function(server, app){
     console.log('--- SOCKET ENABLED ---');
     let socketIo = ws.listen(server);
 
-    socketIo.set('heartbeat timeout', 5);
+    socketIo.set('heartbeat timeout', 2000);
     socketIo.sockets.setMaxListeners(0);
 
 
@@ -117,30 +117,29 @@ module.exports = function(server, app){
          */
         client.on('userRequestGame', function(data){
 
-            if(client.room){
-                socketIo.to(client.id).emit('currentRequestPending', {error : 'Un challenge est déjà en cours'});
+            let targetSocket = socketIo.of('/').connected[data.targetSocketId];
+            if(targetSocket.room){
+                socketIo.to(client.id).emit('userAlreadyInGame', {error : 'Un challenge est déjà en cours'});
+                return;
             }
 
             let user = client.handshake.session.passport.user;
-            let currentUserId = user._id;
-            let targetUsername = data.targetUsername;
-            let targetUserId = data.targetUser;
-            let targetSocketId = data.targetSocketId;
-            let challengerName = user.username;
 
             let roomName = + new Date();
             client.room = roomName;
             client.join(roomName);
 
-            client.to(targetSocketId).emit('requestGame', {
-                targetUserId    : targetUserId,
-                targetSocketId  : targetSocketId,
-                targetUsername  : targetUsername,
+            data = {
+                targetUserId    : data.targetUser,
+                targetSocketId  : data.targetSocketId,
+                targetUsername  : data.targetUsername,
                 roomName        : roomName,
                 fromSocketId    : client.id,
-                fromUserId      : currentUserId,
-                fromUsername    : challengerName
-            });
+                fromUserId      : user._id,
+                fromUsername    : user.username
+            };
+
+            client.to(data.targetSocketId).emit('requestGame', data);
 
         });
 
@@ -151,42 +150,70 @@ module.exports = function(server, app){
         client.on('acceptGame', function(data){
 
             client.room = data.roomName;
-                client.join(data.roomName, function(){
+            client.join(data.roomName, function(){
 
-                    data = {
-                        roomName : data.roomName,
-                        p1 : {id :  data.fromUserId, username : data.fromUsername, socket : data.fromSocketId},
-                        p2 : {id : data.targetUserId, username : data.targetUsername, socket : data.targetSocketId}
-                    };
+                data = {
+                    roomName : data.roomName,
+                    p1 : {id :  data.fromUserId, username : data.fromUsername, socket : data.fromSocketId},
+                    p2 : {id : data.targetUserId, username : data.targetUsername, socket : data.targetSocketId}
+                };
+                let dataTemplate =  {layout : false, data};
 
-                    let dataTemplate =  {layout : false, data};
-
-                    console.log('acceptGame', data);
-
-                    app.render('game/partials/block_vs',dataTemplate,  function(err, hbsTemplate){
+                // Update both users status
+                let status = 'En partie';
+                UserModel.update({_id : {$in : [data.p1.id, data.p2.id]}}, {$set : {status: status}},
+                    function(err, count){
                         if(err){
                             throw err;
                         }
 
-                        data.template = hbsTemplate;
-                        socketIo.sockets.in(data.roomName).emit('challengeWasAccepted', data);
+                        let cssClass = 'label-' + require('../views/helpers/game/getStatusLabel')(status);
+                        socketIo.emit('userStatusChanged', { userId : data.p1.id, newStatus : status, cssClass : cssClass });
+                        socketIo.emit('userStatusChanged', { userId : data.p2.id, newStatus : status, cssClass : cssClass });
                     });
 
 
+                // Rendering block versus (with name and timer)
+                app.render('game/partials/block_vs', dataTemplate,  function(err, hbsTemplate){
+                    if(err){
+                        throw err;
+                    }
+
+                    data.template = hbsTemplate;
+                    socketIo.sockets.in(data.roomName).emit('challengeWasAccepted', data);
                 });
+            });
+        });
+
+
+        client.on('gameWillBegin', function(){
+
+            let countdown = 10;
+
+            let interval = setInterval(function() {
+                if(countdown === 0){
+                    clearInterval(interval);
+                }else{
+                    countdown--;
+                    socketIo.to(client.id).emit('gameTimer', { countdown: countdown });
+                }
+
+            }, 1000);
         });
 
         /**
          * When a game in room start
          */
-        socketIo.sockets.in(client.room).on('startGame', function(data){
+        client.on('gameStart', function(data){
 
             console.log('StarGameEvent');
+
+
             let colors = ['warning','info', 'success', 'primary', 'danger'];
 
             function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    let j = Math.floor(Math.random() * (i + 1));
+                for (let i = array.length -1 ; i > 0; i--) {
+                    let j = Math.floor(Math.random() * i);
                     let temp = array[i];
                     array[i] = array[j];
                     array[j] = temp;
@@ -195,8 +222,20 @@ module.exports = function(server, app){
             }
 
             colors = shuffleArray(colors);
+            let dataTemplate = {colors : colors, layout : false};
 
-            socketIo.sockets.in(client.room).emit('gameInitiliazed', {colors : colors});
+            // Rendering block combinaison (the real game begin)
+            app.render('game/partials/block_combinaison', dataTemplate,  function(err, hbsTemplate){
+                if(err){
+                    throw err;
+                }
+
+                console.log(hbsTemplate);
+
+                socketIo.to(client.id).emit('gameBegin', {template : hbsTemplate, colors : colors});
+            });
+
+
 
 
         });
@@ -220,7 +259,7 @@ module.exports = function(server, app){
             client.leave(client.room);
             client.room = null;
 
-           socketIo.to(data.fromSocketId).emit('challengeWasRejected',  data);
+            socketIo.to(data.fromSocketId).emit('challengeWasRejected',  data);
         });
 
 

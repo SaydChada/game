@@ -1,3 +1,3 @@
-{{#each color in colorsCombinaison }}
-    <p id="random_color_{{ order }}" class="btn btn-{{ color }}">{{ order }}</p>
+{{#each colors }}
+    <p id="random_color_{{math @key '+' 1 }}" class="btn btn-{{this}}">{{math @key '+' 1 }}</p>
 {{/each}}
