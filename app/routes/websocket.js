@@ -9,9 +9,12 @@ module.exports = function(server, app){
     let socketIo = ws.listen(server);
 
     socketIo.set('heartbeat timeout', 5);
+    socketIo.sockets.setMaxListeners(0);
+
 
     // client aka socket : because more readable
     socketIo.on('connection', function (client) {
+
 
         // ONly available for logged in users
         if(!client.handshake.session.passport){
@@ -79,6 +82,11 @@ module.exports = function(server, app){
             });
         });
 
+        client.on('connect_timeout', function(){
+           console.log('connection timeout');
+
+        });
+
 
         /**
          * When user change his status
@@ -135,7 +143,7 @@ module.exports = function(server, app){
 
             client.room = data.roomName;
                 client.join(data.roomName, function(){
-                    socketIo.sockets.in(data.roomName).emit('StartGame', data);
+                    socketIo.sockets.in(data.roomName).emit('gameWillBegin', data);
                 });
         });
 
@@ -144,6 +152,7 @@ module.exports = function(server, app){
          */
         socketIo.sockets.in(client.room).on('startGame', function(data){
 
+            console.log('StarGameEvent');
             let colors = ['warning','info', 'success', 'primary', 'danger'];
 
             function shuffleArray(array) {

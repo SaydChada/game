@@ -13,7 +13,7 @@ $(document).ready(function(){
      LOBBY
      ========================================================================== */
     socketLobbyEvents(socket);
-    enableStatusChange(socket);
+    socketStatusEvents(socket);
 
     /* ==========================================================================
      GAME

@@ -12,6 +12,7 @@ function socketLobbyEvents(socket){
 
     socket.on('userLeave', function(data){
         var $userBlock = $("#" + data.userId);
+        $('#game_start_block').hasClass('invisible') || $('#game_start_block').addClass('invisible');
         $userBlock && $userBlock.remove();
     });
 

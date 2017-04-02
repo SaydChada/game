@@ -7,14 +7,21 @@ function socketGameEvents(socket){
     socket.on('requestGame', function(data){
         $('#challenger_name').html(data.fromUsername);
 
-        $('#deny_challenge').on('click', function(e){
+        var $acceptBtn = $('#accept_challenge');
+        var $rejectBtn = $('#deny_challenge');
+        
+        
+        $rejectBtn.unbind('click');
+        $acceptBtn.unbind('click');
+
+        $rejectBtn.one('click', function(e){
             e.preventDefault();
             $('#challenger_name').html('');
             socket.emit('rejectGame', data);
             $maskChallenge.addClass('hidden');
         });
 
-        $('#accept_challenge').on('click', function(e){
+        $acceptBtn.one('click', function(e){
             e.preventDefault();
             $('#challenger_name').html('');
             socket.emit('acceptGame', data);
@@ -28,15 +35,16 @@ function socketGameEvents(socket){
     });
 
     socket.on('challengeWasRejected', function(data){
-        alert(data.fromUsername + ' a rejeté votre défi !!');
+        alert('"' + data.fromUsername + '" a rejeté votre défi !!');
     });
 
-    socket.on('StartGame', function(data){
+    socket.on('challengeWasAccepted', function(data){
         console.log(data);
+        socket.emit('startGame', data);
         $('#game_start_block').removeClass('invisible');
     });
 
-    socket.on('gameInitiliazed', function(data){
+    socket.on('gameWillBegin', function(data){
         console.log('gameInitiliazed', data);
     });
 

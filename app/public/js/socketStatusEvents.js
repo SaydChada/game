@@ -1,4 +1,4 @@
-function enableStatusChange(socket){
+function socketStatusEvents(socket){
 
     var $statusMenu = $('#status_menu');
 
