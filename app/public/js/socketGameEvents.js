@@ -101,9 +101,10 @@ function socketGameEvents(socket){
         lastRemovedIndexes = [];
 
         $('#game_combinaison').append($(data.template));
-        // setTimeout(function(){
-        //     $('#game_combinaison').empty();
-        // }, 5000);
+        setTimeout(function(){
+            $('#game_combinaison').children('.btn').attr('class', '');
+            $('#game_combinaison').children('.btn').attr('class', 'btn btn-default');
+        }, 5000);
     });
 
     /**

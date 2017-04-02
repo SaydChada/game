@@ -290,6 +290,8 @@ module.exports = function(server, app){
                 p2_score = score;
             }
 
+            //TODO fix double gameSave if game already exist for current room, then dont save it
+            // Maybe if only winner save the game like client.winTheGame && save for p1 and p2 and update both
             let game = new GameModel();
 
             game.room_name = client.gameMetaData.roomName;
