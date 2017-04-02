@@ -2,12 +2,12 @@
 
 Multiplayer game made during my training as JavaScript full stack dev at Ifocop
 
-#Requirements
+# Requirements
 
 - NodeJS
 - MongoDB
 
-#Installation
+# Installation
 
 - clone this repository with git or download it
 - open a terminal and change directory to root of project
