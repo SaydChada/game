@@ -78,7 +78,7 @@ function init(routing, localConf){
     /**
      * Server start then routing then socket.io init
      */
-    http.createServer(app).listen(localConf.server.port, localConf.server.host, function() {
+    http.createServer(app).listen(localConf.server.port, null, function() {
 
         console.log('--- SERVER START --- AT',localConf.server.port, localConf.server.host );
         routing(app);
