@@ -1,3 +1,5 @@
+'use strict';
+
 const baseController = require('./baseController');
 
 class HomesController extends baseController{

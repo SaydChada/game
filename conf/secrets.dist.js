@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Define salt / hashphrase for modules
  * @type {{cookie: string, session: string}}

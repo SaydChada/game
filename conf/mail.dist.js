@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     service: 'TRANSPORT-NAME',
     auth: {

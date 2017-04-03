@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Define database configuration
  * @type {{host: string, port: string, protocol: string, database: string, url: module.exports.url}}

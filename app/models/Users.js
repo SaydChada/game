@@ -1,3 +1,4 @@
+'use strict';
 const baseModel = require('./baseModel');
 const passportLocalMongoose = require('passport-local-mongoose');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Base class for models which have to extends this one
  */

@@ -1,3 +1,4 @@
+'use strict';
 const baseController = require('./baseController');
 
 class AdminsController extends baseController{

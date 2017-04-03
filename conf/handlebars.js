@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Define handlebars configuration
  * @type {{extname: string, partialsDir: string, layoutsDir: string, defaultLayout: string}}

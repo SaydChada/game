@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     serializeStrategy : function(user, done) {
         user = {

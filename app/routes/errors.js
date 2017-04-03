@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Handle routing errors
  * @param err
