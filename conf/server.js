@@ -6,7 +6,7 @@
  */
 module.exports =  {
     host            : 'localhost',
-    port            : '8888',
+    port            : '80',
     protocol        : 'http',
     url             : function(){
         return this.protocol + '://' + this.host +':' + this.port;
