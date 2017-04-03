@@ -80,6 +80,7 @@ function init(routing, localConf){
      */
     http.createServer(app).listen(localConf.server.port, localConf.server.host, function() {
 
+        console.log('--- SERVER START --- AT',localConf.server.port, localConf.server.host );
         routing(app);
         app.socketIo = app.socketIoStart(this, app);
 
