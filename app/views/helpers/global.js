@@ -1,3 +1,4 @@
+'use strict';
 let blocks = Object.create(null);
 
 let debug = function(varToDebug) {
