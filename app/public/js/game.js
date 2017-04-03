@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     // socket connection
-    var socket = io.connect($('#game').data('server'));
+    var socket = io.connect();
 
 
     /* ==========================================================================
