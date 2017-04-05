@@ -102,7 +102,7 @@ function socketGameEvents(socket){
         $('#game_combinaison').append($(data.template));
         setTimeout(function(){
             $('#game_combinaison').children('.btn').attr('class', 'btn btn-default');
-        }, 3000);
+        }, 2000);
     });
 
     /**
