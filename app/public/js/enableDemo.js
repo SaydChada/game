@@ -3,9 +3,11 @@
  */
 'use strict';
 class Demo{
-    constructor(){
+    constructor($blockCombinaison, $blockUserColors){
         this.active = true;
         this.colors = ['warning','info', 'success', 'primary', 'danger'];
+        this.$blockCombinaison = $blockCombinaison;
+        this.$blockUserColors = $blockUserColors;
         this.blockBtns = null;
         this.timeOut = null;
     }
@@ -39,19 +41,20 @@ class Demo{
         return choiceJoin === gameColors;
     }
 
-    renderDemo($gameCombinaisons) {
+    renderDemo() {
 
         if(!this.active){
             return;
         }
+        this.$blockUserColors.children('.btn').html('?');
         this.timeOut && clearTimeout(this.timeOut);
-        $gameCombinaisons.empty();
-        $gameCombinaisons.append($('<p>Démo en atendant un adversaire :-) </p>'));
-        $gameCombinaisons.append(this.renderElement());
+        this.$blockCombinaison.empty();
+        this.$blockCombinaison.append($('<p>Démo en atendant un adversaire :-) </p>'));
+        this.$blockCombinaison.append(this.renderElement());
 
         this.timeOut = setTimeout(function(){
-            $gameCombinaisons.children('.btn').attr('class', 'btn btn-default');
-        }, 5000);
+            this.$blockCombinaison.children('.btn').attr('class', 'btn btn-default');
+        }.bind(this), 5000);
 
     }
 }

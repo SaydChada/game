@@ -7,8 +7,8 @@ function socketGameEvents(socket){
     var $gameCombinaisons   = $('#game_combinaison');
 
     //Activate demo at start
-    var demo = new Demo();
-    demo.renderDemo($gameCombinaisons);
+    var demo = new Demo($gameCombinaisons, $gameUserChoices);
+    demo.renderDemo();
 
 
     // handle user's colors selection
@@ -16,8 +16,13 @@ function socketGameEvents(socket){
     // handle user's removed colors indexes
     var lastRemovedIndexes = [];
 
+    /**
+     * When user rage quit
+     */
     socket.on('userLeaveRoom', function(data){
-        alert('"'+ data.username +'" a quitté la partie');
+        demo.active = true;
+        demo.renderDemo();
+        console.log('"'+ data.username +'" a quitté la partie');
         $('#block_vs').length && $('#block_vs').remove();
     });
 
@@ -73,7 +78,7 @@ function socketGameEvents(socket){
      */
     socket.on('challengeWasRejected', function(data){
         demo.active = true;
-        demo.renderDemo($gameCombinaisons);
+        demo.renderDemo();
         alert('"' + data.fromUsername + '" a rejeté votre défi !!');
     });
 
@@ -84,6 +89,7 @@ function socketGameEvents(socket){
 
         demo.active = false;
         $gameCombinaisons.empty();
+        $('#block_vs').length && $('#block_vs').remove();
         $('#game_start_block').prepend($(data.template));
         socket.emit('gameWillBegin', {});
     });
@@ -135,6 +141,7 @@ function socketGameEvents(socket){
         }
         // Reactivate demo
         demo.active = true;
+        demo.renderDemo();
         socket.emit('afterGameFinished');
     });
 
@@ -143,6 +150,7 @@ function socketGameEvents(socket){
      DOM EVENTS
      ========================================================================== */
 
+    // TODO refactor event redundancy
     $('.btn', '#game_user_choice').on('click', function(){
 
         // console.log('clickedColors', clickedColors);
@@ -171,17 +179,19 @@ function socketGameEvents(socket){
             // If all colors was selected socket to server to check if order colors is good
             if(clickedColors.length === 5){
 
+                // Check if demo active then validate colors and reset game on colors equals
                 if(demo.active){
                  if(demo.checkColors(clickedColors) === true){
                      $gameUserChoices.attr( "class", '' );
                      $gameUserChoices.addClass('bg-success');
                      $gameUserChoices.children('.btn').html('?');
                      clickedColors = [];
-                     demo.renderDemo($gameCombinaisons);
+                     demo.renderDemo();
                  }else{
                      $gameUserChoices.attr( "class", '' );
                      $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
                  }
+                 return;
                 }
 
                 socket.emit('checkUserColors',
