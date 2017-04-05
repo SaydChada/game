@@ -1,9 +1,15 @@
 
 function socketGameEvents(socket){
 
-    var $maskCommands = $('#mask_commands');
-    var $maskChallenge = $('#mask_challenge');
-    var $gameUserChoices = $('#game_user_choice');
+    var $maskCommands       = $('#mask_commands');
+    var $maskChallenge      = $('#mask_challenge');
+    var $gameUserChoices    = $('#game_user_choice');
+    var $gameCombinaisons   = $('#game_combinaison');
+
+    //Activate demo at start
+    var demo = new Demo();
+    demo.renderDemo($gameCombinaisons);
+
 
     // handle user's colors selection
     var clickedColors = [];
@@ -51,6 +57,7 @@ function socketGameEvents(socket){
         $acceptBtn.one('click', function(e){
             e.preventDefault();
             $('#challenger_name').html('');
+            demo.active = false;
             socket.emit('acceptGame', data);
             $maskChallenge.addClass('hidden');
 
@@ -65,6 +72,8 @@ function socketGameEvents(socket){
      * When user reject another user request challenge
      */
     socket.on('challengeWasRejected', function(data){
+        demo.active = true;
+        demo.renderDemo($gameCombinaisons);
         alert('"' + data.fromUsername + '" a rejeté votre défi !!');
     });
 
@@ -73,6 +82,8 @@ function socketGameEvents(socket){
      */
     socket.on('challengeWasAccepted', function(data){
 
+        demo.active = false;
+        $gameCombinaisons.empty();
         $('#game_start_block').prepend($(data.template));
         socket.emit('gameWillBegin', {});
     });
@@ -98,7 +109,7 @@ function socketGameEvents(socket){
         clickedColors = [];
         lastRemovedIndexes = [];
         $('#result_game').html('&nbsp;');
-
+        $gameCombinaisons.empty();
         $('#game_combinaison').append($(data.template));
         setTimeout(function(){
             $('#game_combinaison').children('.btn').attr('class', 'btn btn-default');
@@ -118,9 +129,12 @@ function socketGameEvents(socket){
         }
         else{
             $('#result_game').html('Perdu').attr('class','text-center');
+            $gameUserChoices.attr( "class", '' );
+            $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
             console.log('vous avez perdu');
-
         }
+        // Reactivate demo
+        demo.active = true;
         socket.emit('afterGameFinished');
     });
 
@@ -156,6 +170,19 @@ function socketGameEvents(socket){
 
             // If all colors was selected socket to server to check if order colors is good
             if(clickedColors.length === 5){
+
+                if(demo.active){
+                 if(demo.checkColors(clickedColors) === true){
+                     $gameUserChoices.attr( "class", '' );
+                     $gameUserChoices.addClass('bg-success');
+                     $gameUserChoices.children('.btn').html('?');
+                     clickedColors = [];
+                     demo.renderDemo($gameCombinaisons);
+                 }else{
+                     $gameUserChoices.attr( "class", '' );
+                     $gameUserChoices.hasClass('bg-danger') || $gameUserChoices.addClass('bg-danger');
+                 }
+                }
 
                 socket.emit('checkUserColors',
                     {userColors : clickedColors},
