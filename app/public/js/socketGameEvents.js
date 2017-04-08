@@ -25,7 +25,7 @@ function socketGameEvents(socket){
         demo.renderDemo();
         $maskResponse.removeClass('hidden');
         $('#response_name', $maskResponse).html(data.username);
-        $('#response_message', $maskResponse).html('à quitté la partie');
+        $('#response_message', $maskResponse).html('a quitté la partie');
         $('#block_vs').length && $('#block_vs').remove();
     });
 
@@ -90,7 +90,7 @@ function socketGameEvents(socket){
         demo.renderDemo();
         $maskResponse.removeClass('hidden');
         $('#response_name', $maskResponse).html(data.fromUsername);
-        $('#response_message', $maskResponse).html('à rejeté votre défi');
+        $('#response_message', $maskResponse).html('a rejeté votre défi');
     });
 
     /**
