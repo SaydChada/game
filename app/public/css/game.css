@@ -17,9 +17,13 @@
     z-index: 9999;
 }
 
+.mask *{
+    opacity: 1;
+    color: white;
+}
+
 .mask .block_btn{
     top:35%;
-    opacity:1;
 }
 
 .main_section{
@@ -38,7 +42,7 @@
 
 #lobby_container{
     position:relative;
-    height: 330px;
+    height: 402px;
 }
 
 .lobby button {
@@ -127,7 +131,7 @@
 */
 
 
-#users_list .chat-body {
+#users_list .body {
     margin-left: 47px;
     margin-top: 0;
 }
@@ -155,6 +159,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     margin-bottom: 0;
+    max-height: 100%;
 }
 
 #users_list>li:hover {

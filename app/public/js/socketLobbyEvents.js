@@ -52,9 +52,11 @@ function socketLobbyEvents(socket){
      ========================================================================== */
 
     // remove mask on cancel btn click
-    $('#cancel_mask').on('click', function(e){
+    $('.close-mask').on('click', function(e){
         e.preventDefault();
-        $maskCommands.addClass('hidden');
+       $('.mask').each(function(key, el){
+           $(el).hasClass('hidden') || $(el).addClass('hidden');
+       })
     });
 
     // On click user display user's display mask with button handle event

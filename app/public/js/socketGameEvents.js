@@ -3,6 +3,7 @@ function socketGameEvents(socket){
 
     var $maskCommands       = $('#mask_commands');
     var $maskChallenge      = $('#mask_challenge');
+    var $maskResponse       = $('#mask_response');
     var $gameUserChoices    = $('#game_user_choice');
     var $gameCombinaisons   = $('#game_combinaison');
 
@@ -35,7 +36,11 @@ function socketGameEvents(socket){
      */
     socket.on('userAlreadyInGame', function(data){
         // alert('"' + data.fromUsername + '" est en pleine partie !!');
-        console.log(data);
+        demo.active = true;
+        demo.renderDemo();
+        $maskResponse.removeClass('hidden');
+        $('#response_name', $maskResponse).html(data.fromUsername);
+        $('#response_message', $maskResponse).html('est actuellement en partie');
     });
 
     /**
@@ -68,7 +73,9 @@ function socketGameEvents(socket){
 
         });
 
+        // Hide all other masks
         $maskCommands.addClass('hidden');
+        $maskResponse.addClass('hidden');
         $maskChallenge.removeClass('hidden');
 
     });
@@ -79,7 +86,9 @@ function socketGameEvents(socket){
     socket.on('challengeWasRejected', function(data){
         demo.active = true;
         demo.renderDemo();
-        alert('"' + data.fromUsername + '" a rejeté votre défi !!');
+        $maskResponse.removeClass('hidden');
+        $('#response_name', $maskResponse).html(data.fromUsername);
+        $('#response_message', $maskResponse).html('à rejeté votre défi');
     });
 
     /**
