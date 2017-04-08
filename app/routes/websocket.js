@@ -261,8 +261,6 @@ module.exports = function(server, app){
 
             if(client.room && client.gameColors){
 
-                // console.log('user colors =>' , data.userColors);
-                // console.log('game colors =>', client.gameColors);
                 if(data.userColors.join() == client.gameColors.join()){
                     callback(true);
                     client.winTheGame = true;
@@ -293,6 +291,7 @@ module.exports = function(server, app){
             //TODO fix double gameSave if game already exist for current room, then dont save it
             // Maybe if only winner save the game like client.winTheGame && save for p1 and p2 and update both
             let game = new GameModel();
+            let newStatus = 'Disponible';
 
             game.room_name = client.gameMetaData.roomName;
             game.p1 = client.gameMetaData.p1.id;
@@ -305,15 +304,19 @@ module.exports = function(server, app){
                 }
                 // Update user total score
                 UserModel.update({ _id : client.gameMetaData[client.isPlayer].id},
-                    {$inc: {total_score: score}, $push :{ games : newGame}, $set : {status : 'Disponible'} },
+                    {$inc: {total_score: score}, $push :{ games : newGame}, $set : {status : newStatus} },
                     function(err){
-                    if(err){
-                        throw err;
-                    }
-                    client.room = null;
-                });
-
+                        if(err){
+                            throw err;
+                        }
+                        // Change users status to available
+                        let cssClass = 'label-' + require('../views/helpers/game/getStatusLabel')(newStatus);
+                        socketIo.emit('userStatusChanged', { userId :game.p1, newStatus : newStatus, cssClass: cssClass });
+                        socketIo.emit('userStatusChanged', { userId : game.p2, newStatus : newStatus, cssClass: cssClass });
+                    });
             });
+            // Reset client room
+            client.room = null;
 
         });
 
