@@ -39,7 +39,7 @@ function socketGameEvents(socket){
         demo.active = true;
         demo.renderDemo();
         $maskResponse.removeClass('hidden');
-        $('#response_name', $maskResponse).html(data.fromUsername);
+        $('#response_name', $maskResponse).html(data.targetUsername);
         $('#response_message', $maskResponse).html('est actuellement en partie');
     });
 

@@ -121,7 +121,7 @@ module.exports = function(server, app){
 
             let targetSocket = socketIo.of('/').connected[data.targetSocketId];
             if(targetSocket && targetSocket.room){
-                socketIo.to(client.id).emit('userAlreadyInGame', {error : 'Un challenge est déjà en cours'});
+                socketIo.to(client.id).emit('userAlreadyInGame', data);
                 return;
             }
 
