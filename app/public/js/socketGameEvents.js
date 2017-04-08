@@ -23,7 +23,9 @@ function socketGameEvents(socket){
     socket.on('userLeaveRoom', function(data){
         demo.active = true;
         demo.renderDemo();
-        console.log('"'+ data.username +'" a quitté la partie');
+        $maskResponse.removeClass('hidden');
+        $('#response_name', $maskResponse).html(data.username);
+        $('#response_message', $maskResponse).html('à quitté la partie');
         $('#block_vs').length && $('#block_vs').remove();
     });
 
