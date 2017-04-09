@@ -16,7 +16,7 @@ function socketLobbyEvents(socket){
 
                 var existingBlockUser = $('#' + userId);
                 if(existingBlockUser.length){
-                    existingBlockUser.replaceWith($(blockUser));
+                    existingBlockUser.replaceWith($(blockUser).addClass('bg-primary'));
             }
         });
 
@@ -60,7 +60,7 @@ function socketLobbyEvents(socket){
     });
 
     // On click user display user's display mask with button handle event
-    $userList.on('click','li:not(.bg-primary>li)',{}, function(){
+    $userList.on('click','li:not(.bg-primary)',{}, function(){
         var $el = $(this);
         var id = $el.attr('id');
         var socketId = $el.data('socket-id');

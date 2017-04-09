@@ -11,7 +11,7 @@
             Changer mon statut
             <span class="caret pull-right"></span>
         </button>
-        <ul class="dropdown-menu" id="status_menu" aria-labelledby="dropdownMenu">
+        <ul class="dropdown-menu" id="status_menu">
             <li data-status="Disponible"><a href="#" class="bg-success" >Disponible</a> </li>
             <li data-status="En partie"><a href="#" class="bg-info" >En partie</a></li>
             <li data-status="Occupé(e)"><a href="#" class="bg-warning" >Occupé(e)</a></li>
@@ -24,9 +24,7 @@
         <ul class="list-unstyled list" id="users_list">
             {{#if user}}
                 {{#with user}}
-                    <div class="bg-primary">
-                        {{> block_user }}
-                    </div>
+                    {{> block_user isCurrent = true }}
                 {{/with}}
             {{/if}}
             {{#each onlineUsers }}
